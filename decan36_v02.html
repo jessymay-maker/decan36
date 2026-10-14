@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>西占盤 36 旬圓盤</title>
+<style>
+:root{
+  --bg:#f5f1e8; --panel:#fffdf8; --ink:#2a2620; --muted:#7b7467; --line:#d6cdbb;
+  --accent:#8c5a1e; --sel:#f6dc9b; --hov:#fbeecb;
+  --fire:#d9534f; --earth:#5a9a4b; --air:#c99a14; --water:#3b82c4;
+  --mars:#d9534f; --sun:#d19a0f; --venus:#2f9e73; --mercury:#e0802a;
+  --moon:#5d8fcb; --saturn:#7a7a86; --jupiter:#7a5ad0;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#14161c; --panel:#1c1f27; --ink:#ece7dc; --muted:#9a9488; --line:#3a3e4a;
+    --accent:#e6b566; --sel:#5b4620; --hov:#33302a;
+    --saturn:#a3a3b0;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC",system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:960px;margin:0 auto;padding:16px 16px 48px}
+h1{font-size:1.4rem;margin:8px 0 2px}
+.sub{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+.toolbar .lbl{color:var(--muted);font-size:.85rem}
+button,select,input{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:5px 10px}
+button{cursor:pointer}
+button.on{background:var(--sel);border-color:var(--accent)}
+.wheelbox{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px}
+svg{display:block;width:100%;min-width:640px;height:auto;margin:0 auto;max-width:920px}
+svg text{font-family:inherit;fill:var(--ink);pointer-events:none;user-select:none}
+.sg{stroke:var(--line);stroke-width:1.2;cursor:default}
+.sg.fire{fill:color-mix(in srgb,var(--fire) 20%,var(--panel))}
+.sg.earth{fill:color-mix(in srgb,var(--earth) 20%,var(--panel))}
+.sg.air{fill:color-mix(in srgb,var(--air) 22%,var(--panel))}
+.sg.water{fill:color-mix(in srgb,var(--water) 20%,var(--panel))}
+.sg.on{stroke:var(--accent);stroke-width:3}
+.dc{fill:var(--panel);stroke:var(--line);stroke-width:1;cursor:pointer;outline:none}
+.dc:hover,.dc:focus{fill:var(--hov);stroke:var(--accent);stroke-width:2}
+.dc.on{fill:var(--sel);stroke:var(--accent);stroke-width:3}
+.hs{fill:color-mix(in srgb,var(--line) 35%,var(--panel));stroke:var(--line);stroke-width:1}
+.hs.on{fill:var(--sel)}
+.center{fill:var(--panel);stroke:var(--line);stroke-width:1.2}
+.muted{fill:var(--muted)!important}
+.asc{stroke:var(--accent);stroke-width:2;stroke-dasharray:5 4}
+.status{margin-top:12px;background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--accent);
+  border-radius:12px;padding:12px 16px;min-height:150px}
+.status .head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.status .big{font-size:2rem;line-height:1}
+.status .ttl{font-size:1.15rem;font-weight:700}
+.status dl{display:grid;grid-template-columns:5.2em 1fr;gap:4px 10px;margin:0}
+.status dt{color:var(--muted)}
+.status dd{margin:0}
+.hint{color:var(--muted);font-size:.8rem;margin-top:4px}
+h2{font-size:1.15rem;margin:28px 0 8px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.filters input{flex:1 1 200px;min-width:160px}
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:860px;font-size:.92rem}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{position:sticky;top:0;background:var(--panel);z-index:1;border-bottom:2px solid var(--line);white-space:nowrap}
+tr.row{cursor:pointer}
+tr.row:hover{background:var(--hov)}
+tr.row.on{background:var(--sel)}
+tr.first td{border-top:3px solid var(--line)}
+td.pl{white-space:nowrap;font-weight:600}
+td.pl span.sym{font-size:1.2rem;margin-right:4px}
+td.n{color:var(--muted);white-space:nowrap}
+td.sg1{white-space:nowrap}
+.cnt{color:var(--muted);font-size:.85rem;margin:6px 2px}
+.foot{color:var(--muted);font-size:.8rem;margin-top:18px}
+a.go{font-size:.8rem;color:var(--accent);text-decoration:none;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>西占盤 36 旬（Decans）圓盤與條列</h1>
+  <p class="sub">逆時針排列・白羊座為第 1 宮（9 點鐘方向）・天秤 3 點、巨蟹 6 點、摩羯 12 點。點選或滑過圓盤格子，下方狀態欄顯示塔羅與阿格里帕解釋。</p>
+
+  <div class="toolbar">
+    <span class="lbl">白羊位置：</span>
+    <button id="m-start" class="on" type="button">白羊 0° 對齊 9 點鐘線（上升點）</button>
+    <button id="m-center" type="button">白羊置中於 9 點鐘</button>
+  </div>
+
+  <div class="wheelbox" id="wheelbox"></div>
+  <div class="status" id="status" aria-live="polite"></div>
+
+  <h2 id="listtitle">條列式（36 旬）</h2>
+  <div class="filters">
+    <input id="q" type="search" placeholder="搜尋：星座、行星、含義、塔羅、阿格里帕關鍵字">
+    <select id="fs"><option value="">全部星座</option></select>
+    <select id="fp"><option value="">全部行星</option></select>
+    <button id="reset" type="button">重設</button>
+  </div>
+  <div class="cnt" id="cnt"></div>
+  <div class="tablebox">
+    <table>
+      <thead><tr><th>#</th><th>旬</th><th>度數</th><th>守護行星</th><th>含義</th><th>塔羅牌</th><th>阿格里帕解釋</th><th></th></tr></thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
+
+  <p class="foot">資料說明：行星依迦勒底順序排列（白羊 0° 起為火星）；塔羅採金色黎明體系；阿格里帕內容出自《神秘哲學三書》第二卷第 37 章（Faces 之形象與作用），為中文意譯；「含義」欄為依其描述與傳統旬星關鍵詞所歸納。</p>
+</div>
+
+<script>
+const SIGNS=[
+  {zh:'白羊',g:'♈',el:'fire'},{zh:'金牛',g:'♉',el:'earth'},{zh:'雙子',g:'♊',el:'air'},
+  {zh:'巨蟹',g:'♋',el:'water'},{zh:'獅子',g:'♌',el:'fire'},{zh:'處女',g:'♍',el:'earth'},
+  {zh:'天秤',g:'♎',el:'air'},{zh:'天蠍',g:'♏',el:'water'},{zh:'射手',g:'♐',el:'fire'},
+  {zh:'摩羯',g:'♑',el:'earth'},{zh:'水瓶',g:'♒',el:'air'},{zh:'雙魚',g:'♓',el:'water'}
+];
+const PL={
+  mars:{s:'♂',zh:'火星'},sun:{s:'☉',zh:'太陽'},venus:{s:'♀',zh:'金星'},mercury:{s:'☿',zh:'水星'},
+  moon:{s:'☽',zh:'月亮'},saturn:{s:'♄',zh:'土星'},jupiter:{s:'♃',zh:'木星'}
+};
+const VS='︎';
+// [行星, 含義, 塔羅(中), 塔羅(金色黎明牌名), 阿格里帕解釋]
+const D=[
+['mars','勇氣、衝勁、強勢','權杖二','支配 Dominion','黑膚高大男子，白衣束腰，眼帶赤紅，神情憤怒。主大膽、剛毅、高傲、厚顏。'],
+['sun','高貴、權威、統治','權杖三','美德 Virtue','女子外穿紅袍、內著白衣，衣擺覆足。賜高貴、王權與廣大的統治力。'],
+['venus','溫和、喜悅、才智','權杖四','完成 Completion','膚白面蒼、紅髮紅袍的男子，一手持金手鐲，一手持木杖，焦躁如怒，因心有餘而力不足。賜才智、溫和、喜悅與美貌。'],
+['mercury','耕耘、建設、務實','錢幣五','憂慮 Worry','裸身男子，是弓手、收割者或農夫，出外播種、耕地、建造、繁衍，並依幾何規則分地。'],
+['moon','權柄、地位','錢幣六','成功 Success','裸身男子手持鑰匙。賜權力、高貴與對民眾的支配。'],
+['saturn','必需、辛勞、束縛','錢幣七','失敗 Failure','男子手持蛇與標槍。象徵必需與利益，也象徵困苦與奴役。'],
+['jupiter','學習、技藝、無實利的知識','寶劍八','干擾 Interference','男子手持杖，如在服侍他人。賜智慧與數學、技藝之知，但這些學問無實利。'],
+['mars','靈巧、勞苦、探尋','寶劍九','殘酷 Cruelty','一人持笛，另一人彎腰掘地。象徵不名譽的靈巧（如小丑、雜耍者），也主勞苦與艱辛的探尋。'],
+['sun','健忘、嬉鬧、空談','寶劍十','毀滅 Ruin','一人尋找武器，另有愚人右手持鳥、左手持笛。象徵健忘、憤怒、魯莽、玩笑、粗俗與無益之言。'],
+['venus','敏銳、魅力、受人愛慕','聖杯二','愛 Love','年輕少女，衣飾華美，頭戴冠。賜感官敏銳、心思細膩與受人愛慕。'],
+['mercury','歡樂、財富、異性緣','聖杯三','豐盛 Abundance','衣著體面的男子，或一男一女對坐桌前遊戲。賜財富、歡樂、喜悅與女性之愛。'],
+['moon','爭逐、狩獵、奪取','聖杯四','奢華 Luxury','獵人持矛與號角，帶犬出獵。象徵人與人的爭鬥、追逐逃者，以及靠武力與吵鬧奪取事物。'],
+['saturn','勇猛、暴烈、重擔','權杖五','衝突 Strife','男子騎在獅子上。象徵大膽、暴力、殘酷、邪惡、淫欲，以及須承受的勞苦。'],
+['jupiter','戰鬥、隱秘的勝利','權杖六','勝利 Victory','舉手的形象與頭戴冠的男子，怒容威嚇，右手拔劍、左手持盾。關乎隱藏的紛爭、不為人知的勝利、卑劣之人，以及爭吵與戰鬥的起因。'],
+['mars','情誼、為息爭而退讓','權杖七','勇氣 Valour','手持鞭子的青年，與一神色憂鬱、面相不善的男子。象徵愛與結伴，也象徵為避免爭端而放棄自身權利。'],
+['sun','勤勉、積累、生產','錢幣八','審慎 Prudence','善良少女與一名撒種的男子。主獲財、飲食節制、耕種、播種與繁衍。'],
+['venus','聚財、貪取','錢幣九','獲利 Gain','身披獸皮的黑膚男子，與頭髮蓬亂、手持袋子的男子。象徵獲利、聚斂與貪婪。'],
+['mercury','衰弱、損耗、荒蕪','錢幣十','財富 Wealth','白膚耳聾的女子，或拄杖老人。顯示虛弱、疾病、肢體殘缺、樹木毀壞與土地荒蕪。'],
+['moon','正義、扶助弱者','寶劍二','和平 Peace','面帶怒色、手持笛的男子，與一讀書之人。作用在於主持公道，幫助弱小者對抗強暴邪惡。'],
+['saturn','義憤、生活安穩','寶劍三','悲傷 Sorrow','兩名憤怒的男子，與一衣著體面、坐在椅上的男子。顯示對惡行的義憤，以及生活安穩、物資豐盛。'],
+['jupiter','享樂、放縱、貪食','寶劍四','休戰 Truce','持弓的暴烈男子，前有一裸身男子，另一人一手持麵包、一手持酒杯。顯示邪欲、歌唱、遊樂與貪食。'],
+['mars','美貌與背叛並存','聖杯五','樂中之失 Loss in Pleasure','容貌端麗的女子，兩名男子毆打她。主美貌端莊，也主爭鬥、背叛、欺詐、誹謗與毀滅。'],
+['sun','無恥、欺詐、挑撥','聖杯六','愉悅 Pleasure','裸男裸女，與一坐地男子，前有兩犬互咬。主無恥、欺騙、不誠，並在人間挑起禍端與爭鬥。'],
+['venus','沉溺、暴力','聖杯七','虛幻的成功 Illusionary Success','男子彎身跪地，一女子以杖擊之。象徵酗酒、淫亂、憤怒、暴力與爭鬥。'],
+['mercury','大膽、自由、好鬥','權杖八','迅捷 Swiftness','披鎖甲、手持出鞘劍的武裝男子。主大膽、惡意與自由。'],
+['moon','悲傷、不安','權杖九','力量 Strength','衣物裹身、哭泣的女子。主悲傷，以及對自身安危的恐懼。'],
+['saturn','固執、任性、爭執','權杖十','壓迫 Oppression','膚色如金的男子，或手持杖玩耍的閒人。象徵一意孤行、固執己見、熱衷惡事、爭執與可怕之事。'],
+['jupiter','外出、有得有失','錢幣二','變化 Change','一女子與一背著滿袋的男子。象徵外出歡慶、有得有失，且帶軟弱與卑微。'],
+['mars','苛求、探究不可知','錢幣三','工作 Works','兩名女子，與一仰望空中飛鳥的男子。象徵苛求不可為之事、探究不可知之事。'],
+['sun','審慎治理、貪財','錢幣四','權力 Power','貞潔而工於手藝的女子，與在桌上點錢的錢商。主以審慎治事，亦主貪財與吝嗇。'],
+['venus','謀生、清貧','寶劍五','挫敗 Defeat','精明男子與紡紗女子。主為謀利而思慮勞作，處於貧困與卑微。'],
+['mercury','理解、謙和、教養','寶劍六','科學 Science','長鬚男子。關乎理解力、溫和、謙遜、自由與良好舉止。'],
+['moon','傲慢、厚顏','寶劍七','徒勞 Futility','黑膚而憤怒的男子。顯示傲慢無禮與厚顏無恥。'],
+['saturn','旅行、遷移、操勞','聖杯八','怠惰 Indolence','肩負重擔、衣著整齊的男子。主旅行、遷移，以及為求財求衣而操勞。'],
+['jupiter','抱負、雄心','聖杯九','幸福 Happiness','容貌姣好、裝扮華麗的女子。主嚮往並致力於崇高偉大之事。'],
+['mars','安逸、情欲','聖杯十','滿足 Satiety','裸身男子或青年，身旁有頭戴花冠的美麗少女。主休息、懶散、愉悅、淫佚與擁抱女子。']
+].map((r,i)=>({i,sign:Math.floor(i/3),dec:i%3,pl:r[0],mean:r[1],tz:r[2],tt:r[3],ag:r[4]}));
+
+const RANGE=['0–10°','10–20°','20–30°'];
+const nm=d=>SIGNS[d.sign].zh+'座 第'+(d.dec+1)+'旬';
+const sym=k=>PL[k].s+VS;
+
+// ---------- 圓盤 ----------
+const CX=460,CY=460;
+let mode='start';   // start：白羊 0° 在 9 點鐘線；center：白羊置中於 9 點鐘
+let sel=0;
+const theta=l=>(180+l-(mode==='center'?15:0))*Math.PI/180;  // 數學角度，逆時針遞增
+const pt=(r,l)=>{const t=theta(l);return[CX+r*Math.cos(t),CY-r*Math.sin(t)]};
+const f=n=>n.toFixed(2);
+function sector(r1,r2,l1,l2){
+  const a=pt(r2,l1),b=pt(r2,l2),c=pt(r1,l2),e=pt(r1,l1);
+  return `M${f(a[0])} ${f(a[1])}A${r2} ${r2} 0 0 0 ${f(b[0])} ${f(b[1])}L${f(c[0])} ${f(c[1])}A${r1} ${r1} 0 0 1 ${f(e[0])} ${f(e[1])}Z`;
+}
+function txt(r,l,s,size,extra=''){
+  const p=pt(r,l);
+  return `<text x="${f(p[0])}" y="${f(p[1])}" font-size="${size}" text-anchor="middle" dominant-baseline="central" ${extra}>${s}</text>`;
+}
+function drawWheel(){
+  let h=`<svg viewBox="0 0 920 920" role="img" aria-label="西占盤36旬圓盤">`;
+  // 星座環
+  SIGNS.forEach((s,k)=>{
+    h+=`<path class="sg ${s.el}" data-s="${k}" d="${sector(350,425,k*30,k*30+30)}"/>`;
+    h+=txt(401,k*30+15,s.g+VS,30,`style="fill:var(--${s.el})"`);
+    h+=txt(370,k*30+15,s.zh,14,'font-weight="700"');
+  });
+  // 旬環
+  D.forEach(d=>{
+    const l1=d.i*10,l2=l1+10,m=l1+5;
+    const sg=SIGNS[d.sign];
+    h+=`<path class="dc" data-i="${d.i}" tabindex="0" role="button" aria-label="${nm(d)} ${PL[d.pl].zh}" d="${sector(190,350,l1,l2)}"/>`;
+    // 格內文字沿半徑方向堆疊並隨角度旋轉（下半圈翻正，避免倒字與左右重疊）
+    const c=pt(270,m);
+    let a=90-theta(m)*180/Math.PI;
+    a=((a+180)%360+360)%360-180;
+    let s=1;
+    if(Math.abs(a)>90){a+=180;s=-1}
+    const row=(r,t,size,extra)=>`<text x="0" y="${f(-(r-270)*s)}" font-size="${size}" text-anchor="middle" dominant-baseline="central" ${extra}>${t}</text>`;
+    h+=`<g transform="translate(${f(c[0])} ${f(c[1])}) rotate(${f(a)})">`
+      +row(337,'#'+(d.i+1),10,'class="muted"')
+      +row(316,sg.g+VS,19,`style="fill:var(--${sg.el})"`)
+      +row(293,sg.zh+' '+(d.dec+1),12,'font-weight="600"')
+      +row(264,sym(d.pl),25,`style="fill:var(--${d.pl})"`)
+      +row(240,PL[d.pl].zh,11,'')
+      +row(215,(d.dec*10)+'–'+(d.dec*10+10),9,'class="muted"')
+      +'</g>';
+  });
+  // 宮位環（整宮制：第 n 宮 = 第 n 個星座）
+  SIGNS.forEach((s,k)=>{
+    h+=`<path class="hs" data-s="${k}" d="${sector(145,190,k*30,k*30+30)}"/>`;
+    h+=txt(167,k*30+15,String(k+1),15,'class="muted"');
+  });
+  // 中央（縮小，只留標題）
+  h+=`<circle class="center" cx="${CX}" cy="${CY}" r="145"/>`;
+  h+=`<text x="${CX}" y="${CY-38}" font-size="26" font-weight="700" text-anchor="middle">36 旬</text>`;
+  h+=`<text x="${CX}" y="${CY-14}" font-size="12" text-anchor="middle" class="muted">Decans・西占盤</text>`;
+  h+=`<text x="${CX}" y="${CY+14}" font-size="13" text-anchor="middle">↺ 逆時針排列</text>`;
+  h+=`<text x="${CX}" y="${CY+36}" font-size="11" text-anchor="middle" class="muted">白羊 = 第 1 宮（9 點鐘）</text>`;
+  h+=`<text x="${CX}" y="${CY+54}" font-size="11" text-anchor="middle" class="muted">天秤 3・巨蟹 6・摩羯 12</text>`;
+  // 上升點（9 點鐘）標記
+  h+=`<line class="asc" x1="${CX-427}" y1="${CY}" x2="${CX-145}" y2="${CY}"/>`;
+  h+=`<text x="6" y="${CY-12}" font-size="13" font-weight="700" style="fill:var(--accent)">ASC</text>`;
+  h+=`<text x="6" y="${CY+8}" font-size="12" style="fill:var(--accent)">第1宮</text>`;
+  h+='</svg>';
+  document.getElementById('wheelbox').innerHTML=h;
+  paint();
+}
+function paint(){
+  document.querySelectorAll('.dc').forEach(e=>e.classList.toggle('on',+e.dataset.i===sel));
+  const s=D[sel].sign;
+  document.querySelectorAll('.sg,.hs').forEach(e=>e.classList.toggle('on',+e.dataset.s===s));
+  document.querySelectorAll('tr.row').forEach(e=>e.classList.toggle('on',+e.dataset.i===sel));
+}
+
+// ---------- 狀態欄 ----------
+function show(i){
+  const d=D[i],p=PL[d.pl],s=SIGNS[d.sign];
+  document.getElementById('status').innerHTML=
+   `<div class="head"><span class="big" style="color:var(--${d.pl})">${p.s+VS}</span>
+      <span class="ttl">${s.g+VS} ${nm(d)}（${RANGE[d.dec]}）・${p.zh}</span>
+      <span class="muted" style="color:var(--muted)">#${i+1} / 36・第 ${d.sign+1} 宮</span></div>
+    <dl><dt>守護行星</dt><dd>${p.s+VS} ${p.zh}</dd>
+        <dt>含義</dt><dd>${d.mean}</dd>
+        <dt>塔羅牌</dt><dd>${d.tz}（${d.tt}）</dd>
+        <dt>阿格里帕</dt><dd>${d.ag}</dd></dl>
+    <div class="hint">滑過圓盤格子可預覽，點選即鎖定；Tab 鍵可逐格切換，Enter 選取。</div>`;
+}
+function select(i){sel=i;paint();show(i)}
+
+// ---------- 條列表 ----------
+const tb=document.getElementById('tb');
+function rowHTML(d){
+  const p=PL[d.pl];
+  return `<tr class="row${d.dec===0?' first':''}" data-i="${d.i}">
+    <td class="n">${d.i+1}</td>
+    <td class="sg1">${SIGNS[d.sign].g+VS} ${SIGNS[d.sign].zh} 第${d.dec+1}旬</td>
+    <td class="n">${RANGE[d.dec]}</td>
+    <td class="pl" style="color:var(--${d.pl})"><span class="sym">${p.s+VS}</span>${p.zh}</td>
+    <td>${d.mean}</td>
+    <td>${d.tz}<br><span style="color:var(--muted)">${d.tt}</span></td>
+    <td>${d.ag}</td>
+    <td><a class="go" href="#wheelbox" data-go="1">↑圓盤</a></td></tr>`;
+}
+function filterList(){
+  const q=document.getElementById('q').value.trim().toLowerCase();
+  const fs=document.getElementById('fs').value,fp=document.getElementById('fp').value;
+  const list=D.filter(d=>{
+    if(fs!==''&&d.sign!==+fs)return false;
+    if(fp&&d.pl!==fp)return false;
+    if(!q)return true;
+    const hay=[SIGNS[d.sign].zh,'第'+(d.dec+1)+'旬',PL[d.pl].zh,d.mean,d.tz,d.tt,d.ag].join(' ').toLowerCase();
+    return q.split(/\s+/).every(w=>hay.includes(w));
+  });
+  tb.innerHTML=list.map(rowHTML).join('');
+  document.getElementById('cnt').textContent='顯示 '+list.length+' / 36 旬';
+  paint();
+}
+
+// ---------- 事件 ----------
+const box=document.getElementById('wheelbox');
+box.addEventListener('mouseover',e=>{const c=e.target.closest('.dc');if(c)show(+c.dataset.i)});
+box.addEventListener('mouseleave',()=>show(sel));
+box.addEventListener('click',e=>{const c=e.target.closest('.dc');if(c)select(+c.dataset.i)});
+box.addEventListener('keydown',e=>{
+  const c=e.target.closest('.dc');
+  if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(+c.dataset.i)}
+});
+box.addEventListener('focusin',e=>{const c=e.target.closest('.dc');if(c)show(+c.dataset.i)});
+tb.addEventListener('click',e=>{
+  const r=e.target.closest('tr.row');if(!r)return;
+  select(+r.dataset.i);
+  if(e.target.closest('[data-go]')){e.preventDefault();box.scrollIntoView({behavior:'smooth',block:'start'})}
+});
+['q','fs','fp'].forEach(id=>document.getElementById(id).addEventListener('input',filterList));
+document.getElementById('reset').addEventListener('click',()=>{
+  document.getElementById('q').value='';document.getElementById('fs').value='';document.getElementById('fp').value='';filterList();
+});
+function setMode(m){
+  mode=m;
+  document.getElementById('m-start').classList.toggle('on',m==='start');
+  document.getElementById('m-center').classList.toggle('on',m==='center');
+  drawWheel();
+}
+document.getElementById('m-start').addEventListener('click',()=>setMode('start'));
+document.getElementById('m-center').addEventListener('click',()=>setMode('center'));
+
+// ---------- 初始化 ----------
+SIGNS.forEach((s,k)=>document.getElementById('fs').insertAdjacentHTML('beforeend',`<option value="${k}">${s.g+VS} ${s.zh}</option>`));
+Object.keys(PL).forEach(k=>document.getElementById('fp').insertAdjacentHTML('beforeend',`<option value="${k}">${PL[k].s+VS} ${PL[k].zh}</option>`));
+drawWheel();
+filterList();
+show(0);
+</script>
+</body>
+</html>

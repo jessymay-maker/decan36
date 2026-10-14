@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>36旬回歸制占星輪盤與對照表</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --border-color: #cbd5e1;
+            --primary: #6366f1;
+            --hover: #f1f5f9;
+            
+            /* Element Colors */
+            --fire: #fef2f2;
+            --earth: #fefce8;
+            --air: #f0f9ff;
+            --water: #f0fdf4;
+            
+            /* Element Borders */
+            --fire-dark: #ef4444;
+            --earth-dark: #eab308;
+            --air-dark: #0ea5e9;
+            --water-dark: #22c55e;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', 'Arial', 'LiHei Pro', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0f172a;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        
+        h2 {
+            text-align: center;
+            color: #334155;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 40px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .wheel-container {
+            flex: 1;
+            min-width: 650px;
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        svg {
+            max-width: 100%;
+            height: auto;
+            transform-origin: center;
+            filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.05));
+        }
+
+        .sector {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            stroke: #fff;
+            stroke-width: 2.5;
+        }
+        
+        .sector:hover, .sector.active {
+            fill: #fde047 !important;
+            stroke: #1e293b;
+            stroke-width: 3.5;
+        }
+        
+        .text-sign {
+            font-size: 28px;
+            font-weight: 800;
+            fill: #0f172a;
+            pointer-events: none;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            letter-spacing: 2px;
+        }
+        
+        .text-planet {
+            font-size: 40px;
+            font-weight: 900;
+            fill: #0f172a;
+            pointer-events: none;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            text-shadow: 2px 2px 0px #fff, -2px -2px 0px #fff, 2px -2px 0px #fff, -2px 2px 0px #fff;
+        }
+
+        .detail-panel {
+            flex: 0 1 450px;
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 20px;
+        }
+
+        .detail-panel h3 {
+            margin-top: 0;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 12px;
+            font-size: 1.6rem;
+            color: #0f172a;
+        }
+
+        .detail-item {
+            margin-bottom: 20px;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .detail-label {
+            font-weight: 700;
+            color: #64748b;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 1.2rem;
+            color: #1e293b;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 16px;
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 800;
+            color: #334155;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+
+        tr {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        tr:hover {
+            background-color: var(--hover);
+            transform: scale(1.002);
+        }
+
+        tr.active-row {
+            background-color: #fef08a !important;
+            font-weight: 600;
+            border-left: 4px solid var(--primary);
+        }
+
+        .planet-symbol {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        .tarot-badge {
+            display: inline-block;
+            background: #334155;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>36旬回歸制占星輪盤</h1>
+    <h2>Golden Dawn Chaldean Decans (逆時針對位版)</h2>
+    
+    <div class="dashboard">
+        <div class="wheel-container">
+            <svg id="astro-wheel" width="850" height="850" viewBox="0 0 850 850">
+                <!-- SVG dynamically rendered -->
+            </svg>
+        </div>
+
+        <div class="detail-panel" id="detail-panel">
+            <h3>旬區間詳細資訊</h3>
+            <p id="placeholder-text" style="color: #64748b; font-style: italic; padding: 20px 0; text-align: center; font-size: 1.1rem;">
+                👉 請點擊或懸停於左側輪盤的扇區，或點擊下方列表以檢視詳細資料。
+            </p>
+            <div id="detail-content" style="display: none;">
+                <div class="detail-item">
+                    <div class="detail-label">旬數與度數</div>
+                    <div class="detail-value" id="det-decan" style="font-weight: 800; color: var(--primary);"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">36旬代表行星符號</div>
+                    <div class="detail-value" id="det-planet" style="font-size: 2rem; font-weight: 900; color: #0f172a; display: flex; align-items: center; gap: 10px;"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">代表的塔羅牌</div>
+                    <div class="detail-value"><span class="tarot-badge" id="det-tarot"></span></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">36旬含義</div>
+                    <div class="detail-value" id="det-meaning"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">阿格里帕解釋</div>
+                    <div class="detail-value" id="det-agrippa" style="font-style: italic; color: #334155;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <h2>36旬詳細對照表</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>旬數</th>
+                    <th>星座與度數</th>
+                    <th>36旬代表行星符號</th>
+                    <th>代表的塔羅牌</th>
+                    <th>36旬含義</th>
+                    <th>阿格里帕解釋</th>
+                </tr>
+            </thead>
+            <tbody id="decan-table-body">
+                <!-- Table rows generated by JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+const decanData = [
+    // Fire - Wands
+    { decan: 1, sign: "白羊座", deg: "00°-10°", planet: "火星 ♂", tarot: "權杖 2", meaning: "勇氣、開創、衝勁、自我主張", agrippa: "權力、強大、膽識、征服、對榮譽與優勢的追求。", element: "fire" },
+    { decan: 2, sign: "白羊座", deg: "10°-20°", planet: "太陽 ☉", tarot: "權杖 3", meaning: "自信、領導力、熱情、光芒", agrippa: "崇高、高貴、建立威望、領導與長遠佈局。", element: "fire" },
+    { decan: 3, sign: "白羊座", deg: "20°-30°", planet: "金星 ♀", tarot: "權杖 4", meaning: "吸引力、熱情、衝動的愛、美感", agrippa: "和諧、安樂、歡慶、收穫與穩固的基礎。", element: "fire" },
+    // Earth - Pentacles
+    { decan: 4, sign: "金牛座", deg: "00°-10°", planet: "水星 ☿", tarot: "金幣 5", meaning: "實用思維、物質累積、商業、穩健", agrippa: "貧困、憂慮、勞碌、物質上的匱乏或考驗。", element: "earth" },
+    { decan: 5, sign: "金牛座", deg: "10°-20°", planet: "月亮 ☽", tarot: "金幣 6", meaning: "情感滋養、安全感、囤積、直覺", agrippa: "慷慨、施與受、財務均衡、慈善與公平回報。", element: "earth" },
+    { decan: 6, sign: "金牛座", deg: "20°-30°", planet: "土星 ♄", tarot: "金幣 7", meaning: "堅毅、遲緩、物質擔憂、勤懇耐勞", agrippa: "辛勤耕耘、耐心等待收成、評估與反思。", element: "earth" },
+    // Air - Swords (Corrected as per request)
+    { decan: 7, sign: "雙子座", deg: "00°-10°", planet: "木星 ♃", tarot: "寶劍 8", meaning: "知識擴展、多才多藝、樂觀、溝通", agrippa: "內心衝突、平衡抉擇、盲目、僵局與防備。", element: "air" },
+    { decan: 8, sign: "雙子座", deg: "10°-20°", planet: "火星 ♂", tarot: "寶劍 9", meaning: "言語犀利、思維敏捷、爭論、競爭", agrippa: "心碎、悲傷、分離、痛苦與理性切斷情感。", element: "air" },
+    { decan: 9, sign: "雙子座", deg: "20°-30°", planet: "太陽 ☉", tarot: "寶劍 10", meaning: "洞察力、明晰、社交魅力、求知慾", agrippa: "休養生息、暫停、冥想、療癒與恢復精力。", element: "air" },
+    // Water - Cups
+    { decan: 10, sign: "巨蟹座", deg: "00°-10°", planet: "金星 ♀", tarot: "聖杯 2", meaning: "家庭之愛、情感保護、溫柔、依戀", agrippa: "結合、和諧的關係、合作、情感交流與互信。", element: "water" },
+    { decan: 11, sign: "巨蟹座", deg: "10°-20°", planet: "水星 ☿", tarot: "聖杯 3", meaning: "敏感、記憶、心智與情感的交織、保護", agrippa: "歡慶、友誼、社群分享、豐盛與快樂。", element: "water" },
+    { decan: 12, sign: "巨蟹座", deg: "20°-30°", planet: "月亮 ☽", tarot: "聖杯 4", meaning: "深層情感、直覺、防衛、潛意識流動", agrippa: "倦怠、冷漠、沉思、忽略身邊的新機會。", element: "water" },
+    // Fire - Wands
+    { decan: 13, sign: "獅子座", deg: "00°-10°", planet: "土星 ♄", tarot: "權杖 5", meaning: "自律、威嚴、榮譽、重責任的領導", agrippa: "競爭、衝突、意見不合、群體中的張力與摩擦。", element: "fire" },
+    { decan: 14, sign: "獅子座", deg: "10°-20°", planet: "木星 ♃", tarot: "權杖 6", meaning: "慷慨、自信、擴張、名望、高瞻遠矚", agrippa: "勝利、凱旋、公開的認可、成功與榮譽歸來。", element: "fire" },
+    { decan: 15, sign: "獅子座", deg: "20°-30°", planet: "火星 ♂", tarot: "權杖 7", meaning: "勇猛、驕傲、熱血、防衛心強", agrippa: "防守、堅持立場、克服挑戰、捍衛成果。", element: "fire" },
+    // Earth - Pentacles
+    { decan: 16, sign: "處女座", deg: "00°-10°", planet: "太陽 ☉", tarot: "金幣 8", meaning: "秩序、工作狂熱、健康關注、精確", agrippa: "專注技藝、精雕細琢、勤奮工作、學徒精神。", element: "earth" },
+    { decan: 17, sign: "處女座", deg: "10°-20°", planet: "金星 ♀", tarot: "金幣 9", meaning: "美感與實用的結合、挑剔、服務精神", agrippa: "物質豐裕、自給自足、獨立享受、優雅與成果。", element: "earth" },
+    { decan: 18, sign: "處女座", deg: "20°-30°", planet: "水星 ☿", tarot: "金幣 10", meaning: "分析力、理性、知識整理、細節控", agrippa: "家族傳承、財富圓滿、安穩、長遠的保障。", element: "earth" },
+    // Air - Swords (Corrected as per request)
+    { decan: 19, sign: "天秤座", deg: "00°-10°", planet: "月亮 ☽", tarot: "寶劍 2", meaning: "情感平衡、對人際關係的敏感、渴望和平", agrippa: "戰敗、羞辱、失落、不擇手段的爭鬥。", element: "air" },
+    { decan: 20, sign: "天秤座", deg: "10°-20°", planet: "土星 ♄", tarot: "寶劍 3", meaning: "公正、嚴格的契約、法律、審判、責任", agrippa: "渡過難關、平穩過渡、離開混亂尋找療癒。", element: "air" },
+    { decan: 21, sign: "天秤座", deg: "20°-30°", planet: "木星 ♃", tarot: "寶劍 4", meaning: "慷慨的正義、社交擴展、哲理、宏觀協調", agrippa: "策略、智取、隱秘行動、試圖走捷徑或欺瞞。", element: "air" },
+    // Water - Cups
+    { decan: 22, sign: "天蠍座", deg: "00°-10°", planet: "火星 ♂", tarot: "聖杯 5", meaning: "深度轉化、強烈慾望、隱秘、防衛與反擊", agrippa: "失落、悲傷、悔恨、將目光停留在打翻的水上。", element: "water" },
+    { decan: 23, sign: "天蠍座", deg: "10°-20°", planet: "太陽 ☉", tarot: "聖杯 6", meaning: "穿透表象的洞察、權力、重生、意志力", agrippa: "回憶、童心、舊情、懷舊與純真的連結。", element: "water" },
+    { decan: 24, sign: "天蠍座", deg: "20°-30°", planet: "金星 ♀", tarot: "聖杯 7", meaning: "情感執著、神祕魅力、深層愛恨、佔有慾", agrippa: "幻想、迷惘、過多選擇、白日夢與不切實際。", element: "water" },
+    // Fire - Wands
+    { decan: 25, sign: "人馬座", deg: "00°-10°", planet: "水星 ☿", tarot: "權杖 8", meaning: "哲學思辨、遠行計畫、探索真理、傳播", agrippa: "快速進展、迅雷不及掩耳的行動、消息傳遞。", element: "fire" },
+    { decan: 26, sign: "人馬座", deg: "10°-20°", planet: "月亮 ☽", tarot: "權杖 9", meaning: "情感探索、異國情懷、直覺式開拓、變動", agrippa: "歷經滄桑後的防備、堅持到底、保持警惕。", element: "fire" },
+    { decan: 27, sign: "人馬座", deg: "20°-30°", planet: "土星 ♄", tarot: "權杖 10", meaning: "規範的遠見、長遠宏圖、自律的冒險", agrippa: "沉重的負擔、責任過重、壓力、接近終點前的勞頓。", element: "fire" },
+    // Earth - Pentacles
+    { decan: 28, sign: "摩羯座", deg: "00°-10°", planet: "木星 ♃", tarot: "金幣 2", meaning: "事業野心、社會聲望、有遠見的實踐", agrippa: "生活平衡、應對變化、財務或行程的靈活調度。", element: "earth" },
+    { decan: 29, sign: "摩羯座", deg: "10°-20°", planet: "火星 ♂", tarot: "金幣 3", meaning: "堅韌不拔、實幹、為了目標不屈不撓", agrippa: "團隊合作、專業技能獲得認可、建造與規劃。", element: "earth" },
+    { decan: 30, sign: "摩羯座", deg: "20°-30°", planet: "太陽 ☉", tarot: "金幣 4", meaning: "權威、崇高地位、掌控現實、榮譽", agrippa: "守成、吝嗇、對物質與安全的執著與防衛。", element: "earth" },
+    // Air - Swords (Corrected as per request, with specific Aquarius 3 data)
+    { decan: 31, sign: "水瓶座", deg: "00°-10°", planet: "金星 ♀", tarot: "寶劍 5", meaning: "群體友誼、理想主義、人道關懷、非傳統美", agrippa: "受到束縛、思維困境、無力感、轉變的契機。", element: "air" },
+    { decan: 32, sign: "水瓶座", deg: "10°-20°", planet: "水星 ☿", tarot: "寶劍 6", meaning: "前衛思維、理性改革、科學精神、社群傳播", agrippa: "焦慮、噩夢、絕望、過度思考帶來的精神痛苦。", element: "air" },
+    { decan: 33, sign: "水瓶座", deg: "20°-30°", planet: "月亮 ☽", tarot: "寶劍 7", meaning: "情感的疏離、不按牌理出牌的直覺、非傳統的情感連結", agrippa: "一個憤怒的黑人；象徵表達傲慢、魯莽、任性的意志，以及無禮的行為。", element: "air" },
+    // Water - Cups
+    { decan: 34, sign: "雙魚座", deg: "00°-10°", planet: "土星 ♄", tarot: "聖杯 8", meaning: "精神犧牲、慈悲、靈性重擔、悲憫情懷", agrippa: "尋求更高意義、放棄陳舊、毅然踏上尋道之旅。", element: "water" },
+    { decan: 35, sign: "雙魚座", deg: "10°-20°", planet: "木星 ♃", tarot: "聖杯 9", meaning: "靈性擴展、慈悲為懷、信仰、無條件的愛", agrippa: "願望達成、心滿意足、物質與情感的豐收幸福。", element: "water" },
+    { decan: 36, sign: "雙魚座", deg: "20°-30°", planet: "火星 ♂", tarot: "聖杯 10", meaning: "靈性能量轉化、潛意識的衝動、慈悲中的剛強", agrippa: "圓滿的幸福、家庭和諧、情感的大同與終極歸宿。", element: "water" }
+];
+
+const signs = [
+    { name: "白羊座", element: "fire" }, { name: "金牛座", element: "earth" },
+    { name: "雙子座", element: "air" }, { name: "巨蟹座", element: "water" },
+    { name: "獅子座", element: "fire" }, { name: "處女座", element: "earth" },
+    { name: "天秤座", element: "air" }, { name: "天蠍座", element: "water" },
+    { name: "人馬座", element: "fire" }, { name: "摩羯座", element: "earth" },
+    { name: "水瓶座", element: "air" }, { name: "雙魚座", element: "water" }
+];
+
+const colors = {
+    fire: "var(--fire)", earth: "var(--earth)", air: "var(--air)", water: "var(--water)",
+    fireBorder: "var(--fire-dark)", earthBorder: "var(--earth-dark)", airBorder: "var(--air-dark)", waterBorder: "var(--water-dark)"
+};
+
+const CX = 425, CY = 425;
+const R_OUTER_SIGN = 400, R_INNER_SIGN = 300;
+const R_OUTER_DECAN = 300, R_INNER_DECAN = 130;
+
+// Cartesian Conversion:
+// Using normal SVG Math where 0 is 3 o'clock, 90 is 6 o'clock.
+// By subtracting angle from 180, we move Counter-Clockwise and start Aries at 9 o'clock.
+function polarToCartesian(cx, cy, radius, angleInDegrees) {
+    const angleInRadians = angleInDegrees * Math.PI / 180.0;
+    return {
+        x: cx + (radius * Math.cos(angleInRadians)),
+        y: cy + (radius * Math.sin(angleInRadians)) // Standard Y down for SVG
+    };
+}
+
+// Generate sector path instructions
+function describeSector(x, y, innerRadius, outerRadius, startAngle, endAngle) {
+    const p1 = polarToCartesian(x, y, outerRadius, startAngle);
+    const p2 = polarToCartesian(x, y, outerRadius, endAngle);
+    const p3 = polarToCartesian(x, y, innerRadius, endAngle);
+    const p4 = polarToCartesian(x, y, innerRadius, startAngle);
+
+    // Because we are drawing from startAngle (larger numerical degree) to endAngle (smaller numerical degree) 
+    // to achieve counter-clockwise drawing, the sweep flag must be 0
+    const largeArcFlag = Math.abs(startAngle - endAngle) > 180 ? 1 : 0;
+    
+    return [
+        "M", p1.x, p1.y,
+        "A", outerRadius, outerRadius, 0, largeArcFlag, 0, p2.x, p2.y,
+        "L", p3.x, p3.y,
+        "A", innerRadius, innerRadius, 0, largeArcFlag, 1, p4.x, p4.y,
+        "Z"
+    ].join(" ");
+}
+
+function initWheel() {
+    const svg = document.getElementById('astro-wheel');
+    
+    // Draw 12 Signs
+    // Aries starts at 180 deg (9 o'clock). 
+    // We subtract angles to move counter-clockwise.
+    for (let i = 0; i < 12; i++) {
+        // e.g., i=0 (Aries) -> 180 to 150
+        // i=3 (Cancer) -> 90 to 60 (starts at 6 o'clock)
+        let startAngle = 180 - (i * 30);
+        let endAngle = 180 - ((i + 1) * 30);
+        
+        let sign = signs[i];
+        let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", describeSector(CX, CY, R_INNER_SIGN, R_OUTER_SIGN, startAngle, endAngle));
+        path.setAttribute("fill", colors[sign.element]);
+        path.setAttribute("stroke", colors[sign.element + "Border"]);
+        path.setAttribute("stroke-width", "3");
+        svg.appendChild(path);
+
+        let midAngle = (startAngle + endAngle) / 2;
+        let tPos = polarToCartesian(CX, CY, (R_OUTER_SIGN + R_INNER_SIGN) / 2, midAngle);
+        let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", tPos.x);
+        text.setAttribute("y", tPos.y);
+        text.setAttribute("class", "text-sign");
+        
+        // Ensure text is upright and readable
+        let textRot = midAngle;
+        let normalizedMid = ((midAngle % 360) + 360) % 360; // handle negatives
+        if (normalizedMid > 90 && normalizedMid < 270) {
+            textRot += 180;
+        }
+        text.setAttribute("transform", `rotate(${textRot}, ${tPos.x}, ${tPos.y})`);
+        text.textContent = sign.name;
+        svg.appendChild(text);
+    }
+
+    // Draw 36 Decans
+    decanData.forEach((d, i) => {
+        let startAngle = 180 - (i * 10);
+        let endAngle = 180 - ((i + 1) * 10);
+        
+        let pPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        pPath.setAttribute("d", describeSector(CX, CY, R_INNER_DECAN, R_OUTER_DECAN, startAngle, endAngle));
+        pPath.setAttribute("fill", colors[d.element]);
+        pPath.setAttribute("class", "sector");
+        pPath.setAttribute("data-id", d.decan);
+        
+        // Add hover and click events
+        pPath.onmouseover = () => selectDecan(d.decan, false);
+        pPath.onclick = () => selectDecan(d.decan, true);
+        
+        svg.appendChild(pPath);
+
+        let midAngle = (startAngle + endAngle) / 2;
+        let planetPos = polarToCartesian(CX, CY, (R_OUTER_DECAN + R_INNER_DECAN) / 2, midAngle);
+        
+        let ptText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        ptText.setAttribute("x", planetPos.x);
+        ptText.setAttribute("y", planetPos.y);
+        ptText.setAttribute("class", "text-planet");
+        
+        let pRotAngle = midAngle + 90; // Rotate to stand upright along the radial
+        let pNormalizedMid = ((midAngle % 360) + 360) % 360;
+        if (pNormalizedMid > 90 && pNormalizedMid <= 270) {
+            pRotAngle += 180;
+        }
+        
+        ptText.setAttribute("transform", `rotate(${pRotAngle}, ${planetPos.x}, ${planetPos.y})`);
+        
+        // Extract just the symbol
+        let symbol = d.planet.split(" ")[1] || d.planet;
+        ptText.textContent = symbol;
+        svg.appendChild(ptText);
+    });
+
+    // Inner Blank Center Circle
+    let centerCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    centerCircle.setAttribute("cx", CX);
+    centerCircle.setAttribute("cy", CY);
+    centerCircle.setAttribute("r", R_INNER_DECAN);
+    centerCircle.setAttribute("fill", "#fff");
+    centerCircle.setAttribute("stroke", "#94a3b8");
+    centerCircle.setAttribute("stroke-width", "4");
+    svg.appendChild(centerCircle);
+    
+    let centerText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    centerText.setAttribute("x", CX);
+    centerText.setAttribute("y", CY);
+    centerText.setAttribute("text-anchor", "middle");
+    centerText.setAttribute("dominant-baseline", "middle");
+    centerText.setAttribute("fill", "#475569");
+    centerText.setAttribute("font-size", "28px");
+    centerText.setAttribute("font-weight", "900");
+    centerText.setAttribute("letter-spacing", "2px");
+    centerText.textContent = "36 旬";
+    svg.appendChild(centerText);
+}
+
+function initTable() {
+    const tbody = document.getElementById('decan-table-body');
+    decanData.forEach(d => {
+        const tr = document.createElement('tr');
+        tr.id = `row-${d.decan}`;
+        
+        let planetColor = '#334155';
+        if(d.element === 'fire') planetColor = '#dc2626';
+        if(d.element === 'earth') planetColor = '#d97706';
+        if(d.element === 'air') planetColor = '#0284c7';
+        if(d.element === 'water') planetColor = '#059669';
+
+        tr.innerHTML = `
+            <td><strong>${d.decan}</strong></td>
+            <td><strong>${d.sign}</strong> <span style="color:#64748b;">${d.deg}</span></td>
+            <td style="color: ${planetColor};">
+                <span class="planet-symbol">${d.planet.split(" ")[1]}</span> ${d.planet.split(" ")[0]}
+            </td>
+            <td><span class="tarot-badge">${d.tarot}</span></td>
+            <td>${d.meaning}</td>
+            <td>${d.agrippa}</td>
+        `;
+        
+        tr.onclick = () => selectDecan(d.decan, true);
+        tr.onmouseover = () => selectDecan(d.decan, false);
+        tbody.appendChild(tr);
+    });
+}
+
+function selectDecan(decanId, scroll = false) {
+    // Reset active states
+    document.querySelectorAll('.sector').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('tr').forEach(el => el.classList.remove('active-row'));
+
+    // Set new active states
+    document.querySelectorAll(`.sector[data-id="${decanId}"]`).forEach(el => el.classList.add('active'));
+
+    const row = document.getElementById(`row-${decanId}`);
+    if (row) {
+        row.classList.add('active-row');
+        if(scroll) {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    // Update Detail Panel
+    const data = decanData.find(d => d.decan === decanId);
+    if (data) {
+        document.getElementById('detail-content').style.display = 'block';
+        document.getElementById('placeholder-text').style.display = 'none';
+        
+        document.getElementById('det-decan').innerText = `第 ${data.decan} 旬 | ${data.sign} ${data.deg}`;
+        
+        let planetColor = '#334155';
+        if(data.element === 'fire') planetColor = '#dc2626';
+        if(data.element === 'earth') planetColor = '#d97706';
+        if(data.element === 'air') planetColor = '#0284c7';
+        if(data.element === 'water') planetColor = '#059669';
+        
+        document.getElementById('det-planet').innerHTML = `<span style="font-size: 2.5rem; color: ${planetColor}">${data.planet.split(" ")[1]}</span> ${data.planet.split(" ")[0]}`;
+        
+        document.getElementById('det-meaning').innerText = data.meaning;
+        document.getElementById('det-tarot').innerText = data.tarot;
+        document.getElementById('det-agrippa').innerText = data.agrippa;
+    }
+}
+
+window.onload = () => {
+    initWheel();
+    initTable();
+};
+</script>
+</body>
+</html>

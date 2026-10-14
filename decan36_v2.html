@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>西洋占星 36旬星｜圓盤與查詢表 v2</title>
+<style>
+:root{--ink:#263044;--muted:#647087;--line:#d9deea;--paper:#fff;--bg:#f3f5fa;--accent:#7257a8;--gold:#c79c48}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;line-height:1.55}
+header{padding:28px 20px 18px;text-align:center;background:linear-gradient(135deg,#292d50,#65518b);color:#fff}
+header h1{margin:0 0 8px;font-size:clamp(1.45rem,3vw,2.2rem)}
+header p{margin:0;color:#eeebf8}
+main{max-width:1500px;margin:auto;padding:20px}
+.note{background:#fff8e8;border:1px solid #ead7a8;border-radius:12px;padding:12px 16px;margin:0 0 18px;font-size:.94rem}
+.layout{display:grid;grid-template-columns:minmax(320px,550px) minmax(0,1fr);gap:20px;align-items:start}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 5px 18px #24304b0a}
+.panel h2{font-size:1.15rem;margin:0 0 10px}
+.wheel-wrap{width:100%;max-width:520px;margin:auto;position:relative}
+svg{width:100%;height:auto;display:block}
+.sector{cursor:pointer;stroke:#fff;stroke-width:2;transition:opacity .15s}
+.sector:hover{opacity:.78}
+.sector.selected{stroke:#24243d;stroke-width:4}
+.wheel-sign{font-size:17px;font-weight:700;fill:#272c43;text-anchor:middle;dominant-baseline:middle;pointer-events:none}
+.wheel-degree{font-size:10px;fill:#687087;text-anchor:middle;pointer-events:none}
+.wheel-card{font-size:10px;fill:#353950;text-anchor:middle;pointer-events:none}
+.center-label{font-size:14px;fill:#fff;text-anchor:middle;font-weight:700}
+.center-sub{font-size:10px;fill:#e8e2f4;text-anchor:middle}
+.legend{font-size:.85rem;color:var(--muted);margin:8px 2px 0}
+.selected-info{margin-top:14px;padding:14px;border-radius:12px;background:#f6f3fb;border:1px solid #e4d9f2}
+.selected-info h3{margin:0 0 8px;font-size:1.08rem}
+.selected-info p{margin:5px 0}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 12px}
+input,select{font:inherit;border:1px solid var(--line);border-radius:9px;padding:9px 10px;background:white;color:var(--ink)}
+input{flex:1;min-width:170px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:.91rem;min-width:850px}
+th,td{padding:10px 11px;border-bottom:1px solid #e8ebf2;text-align:left;vertical-align:top}
+th{background:#f0edf7;position:sticky;top:0;z-index:1;white-space:nowrap}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:#faf8ff}
+tbody tr.active{background:#eee7fa;outline:2px solid #b9a5dc;outline-offset:-2px}
+td:first-child{white-space:nowrap;font-weight:650}
+.symbol{font-size:1.12rem;font-weight:700}
+.section-title{margin:26px 0 12px;font-size:1.35rem}
+footer{color:var(--muted);font-size:.85rem;padding:20px;text-align:center}
+@media(max-width:950px){.layout{grid-template-columns:1fr}.wheel-wrap{max-width:500px}}
+@media print{body{background:white}header{background:white;color:#222;border-bottom:2px solid #555}header p{color:#444}.panel{box-shadow:none;break-inside:avoid}main{max-width:none;padding:8px}.layout{grid-template-columns:1fr 1fr}.controls{display:none}th{position:static}}
+</style>
+</head>
+<body>
+<header>
+<h1>西洋占星 36旬星｜圓盤與查詢表 v2</h1>
+<p>36旬 × 旬主行星 × 塔羅牌 × 阿格里帕面相摘要</p>
+</header>
+<main>
+<div class="note"><b>圓盤方向：</b>星座依黃道順序逆時針排列：牡羊座在 9 點鐘、巨蟹座在 6 點鐘、天秤座在 3 點鐘、摩羯座在 12 點鐘。每個星座分成三旬；點選圓盤任一旬，或點選下方表格列，即可查看完整資料。</div>
+<div class="layout">
+<section class="panel">
+<h2>36旬圓盤</h2>
+<div class="wheel-wrap"><svg id="wheel" viewBox="0 0 520 520" role="img" aria-label="36旬星圓盤，牡羊座在左側，星座逆時針排列"></svg></div>
+<p class="legend">行星符號：☉太陽　☽月亮　☿水星　♀金星　♂火星　♃木星　♄土星。圓盤內只顯示旬主行星符號；塔羅牌只在下方選取狀態欄與完整表格顯示。</p>
+<div id="selectedInfo" class="selected-info" aria-live="polite"></div>
+</section>
+<section class="panel">
+<h2>36旬完整條列／查詢</h2>
+<div class="controls">
+<input id="search" type="search" placeholder="搜尋星座、行星、塔羅牌或關鍵字…">
+<select id="signFilter"><option value="">全部星座</option></select>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>旬位</th><th>旬主星</th><th>含義</th><th>塔羅牌</th><th>阿格里帕解釋（摘要）</th></tr></thead>
+<tbody id="rows"></tbody>
+</table>
+</div>
+</section>
+</div>
+<h2 class="section-title">使用說明</h2>
+<div class="panel">
+<ul>
+<li>旬主星採傳統七曜行星的36旬序列。</li>
+<li>塔羅牌採黃金黎明體系的小阿爾克那數字牌對應。</li>
+<li>「含義」是方便查詢的占星關鍵詞；「阿格里帕解釋」是對《神秘哲學三書》第二卷第37章面相描述的摘要，不是逐字翻譯。</li>
+<li>阿格里帕的面相象徵、旬主星占星意義、塔羅牌義是不同層次，建議分開參照。</li>
+</ul>
+</div>
+</main>
+<footer>離線單一 HTML 檔案｜可用瀏覽器開啟、搜尋、列印或另存 PDF</footer>
+<script>
+const decans = [
+{sign:"牡羊座",range:"0°–10°",planet:"火星",symbol:"♂",meaning:"開創、勇氣、支配、衝勁",tarot:"權杖二",agrippa:"強健、好鬥的男子；象徵勇敢、力量、崇高、強勢與不顧羞恥。"},
+{sign:"牡羊座",range:"10°–20°",planet:"太陽",symbol:"☉",meaning:"權力、成就、領導、地位",tarot:"權杖三",agrippa:"身穿紅白衣的女子；象徵高貴、王位、統治權與權勢。"},
+{sign:"牡羊座",range:"20°–30°",planet:"金星",symbol:"♀",meaning:"魅力、才智、愉悅、創造",tarot:"權杖四",agrippa:"紅髮、持手杖與金手鐲的男子；象徵智慧、溫和、歡樂與美。"},
+{sign:"金牛座",range:"0°–10°",planet:"水星",symbol:"☿",meaning:"勞動、建設、耕耘、規劃",tarot:"錢幣五",agrippa:"農夫或耕作者；象徵播種、耕地、建造、拓殖與土地的規劃。"},
+{sign:"金牛座",range:"10°–20°",planet:"月亮",symbol:"☽",meaning:"資源、權柄、掌控、穩固",tarot:"錢幣六",agrippa:"手持鑰匙的裸體男子；象徵權力、尊貴與對人民的支配。"},
+{sign:"金牛座",range:"20°–30°",planet:"土星",symbol:"♄",meaning:"必要性、利益、束縛、匱乏",tarot:"錢幣七",agrippa:"手持蛇與標槍的男子；象徵必要、利益，也包括困苦與奴役。"},
+{sign:"雙子座",range:"0°–10°",planet:"木星",symbol:"♃",meaning:"學習、知識、數學、技藝",tarot:"寶劍八",agrippa:"手持杖、似在服侍他人的男子；象徵智慧、數字與藝術知識，但未必帶來實利。"},
+{sign:"雙子座",range:"10°–20°",planet:"火星",symbol:"♂",meaning:"機巧、勞苦、搜尋、操弄",tarot:"寶劍九",agrippa:"一人持笛，另一人彎身掘地；象徵不正當的機巧、辛勞及艱苦的探尋。"},
+{sign:"雙子座",range:"20°–30°",planet:"太陽",symbol:"☉",meaning:"言語、機智、衝動、爭執",tarot:"寶劍十",agrippa:"尋找武器的男子與持鳥、笛的愚者；象徵健忘、憤怒、勇敢、戲謔與無益言語。"},
+{sign:"巨蟹座",range:"0°–10°",planet:"金星",symbol:"♀",meaning:"感受力、聰慧、人緣、吸引",tarot:"聖杯二",agrippa:"戴冠、衣著華美的少女；象徵敏銳感官、精細智慧與受到他人喜愛。"},
+{sign:"巨蟹座",range:"10°–20°",planet:"水星",symbol:"☿",meaning:"財富、歡樂、交際、享受",tarot:"聖杯三",agrippa:"穿著整齊的男子，或男女坐席遊戲；象徵財富、歡笑、喜悅與女性的愛。"},
+{sign:"巨蟹座",range:"20°–30°",planet:"月亮",symbol:"☽",meaning:"追逐、競爭、防衛、爭奪",tarot:"聖杯四",agrippa:"持矛角、帶獵犬的獵人；象徵競逐、追捕逃者，以及以武力或爭鬥取得事物。"},
+{sign:"獅子座",range:"0°–10°",planet:"土星",symbol:"♄",meaning:"勞苦、競爭、野心",tarot:"權杖五",agrippa:"騎獅男子；象徵勇猛、暴力、殘酷、邪惡、慾望及必須承受的勞苦。"},
+{sign:"獅子座",range:"10°–20°",planet:"木星",symbol:"♃",meaning:"勝利、競爭、權勢",tarot:"權杖六",agrippa:"戴冠、拔劍持盾的憤怒男子；象徵隱藏的衝突、意外的勝利及爭戰。"},
+{sign:"獅子座",range:"20°–30°",planet:"火星",symbol:"♂",meaning:"勇氣、對抗、取捨",tarot:"權杖七",agrippa:"手持鞭子的青年與神情悲傷的男子；象徵愛與交往，以及為避免衝突而放棄自身權利。"},
+{sign:"處女座",range:"0°–10°",planet:"太陽",symbol:"☉",meaning:"勞動、秩序、累積",tarot:"錢幣八",agrippa:"少女與播種的男子；象徵獲取財富、飲食管理、耕種、播種與拓殖。"},
+{sign:"處女座",range:"10°–20°",planet:"金星",symbol:"♀",meaning:"財富、積累、貪求",tarot:"錢幣九",agrippa:"身披獸皮的黑人與持袋、頭髮濃密的男子；象徵獲利、積聚財富及貪婪。"},
+{sign:"處女座",range:"20°–30°",planet:"水星",symbol:"☿",meaning:"衰弱、損失、衰退",tarot:"錢幣十",agrippa:"白衣女子與拄杖老人；象徵虛弱、疾病、肢體損失、樹木毀壞及土地人口減少。"},
+{sign:"天秤座",range:"0°–10°",planet:"月亮",symbol:"☽",meaning:"公正、調停、扶助弱者",tarot:"寶劍二",agrippa:"憤怒而持笛的男子，以及讀書的人；象徵為弱者對抗強者、主持公道與伸張正義。"},
+{sign:"天秤座",range:"10°–20°",planet:"土星",symbol:"♄",meaning:"憤怒、爭端、安定",tarot:"寶劍三",agrippa:"兩名憤怒男子與一名端坐、衣著華美的人；象徵對邪惡的不滿，以及生活安定、豐足。"},
+{sign:"天秤座",range:"20°–30°",planet:"木星",symbol:"♃",meaning:"慾望、享樂、放縱",tarot:"寶劍四",agrippa:"持弓的暴烈男子、裸體男子，以及持麵包與酒的人；象徵不良慾望、歌唱、遊戲及暴食。"},
+{sign:"天蠍座",range:"0°–10°",planet:"火星",symbol:"♂",meaning:"美貌、衝突、背叛",tarot:"聖杯五",agrippa:"一名美麗女子遭兩名男子擊打；象徵美貌、爭鬥、背叛、欺騙、詆毀與毀滅。"},
+{sign:"天蠍座",range:"10°–20°",planet:"太陽",symbol:"☉",meaning:"欺詐、衝突、愉悅",tarot:"聖杯六",agrippa:"兩名裸體男女、一名坐在地上的男子及互咬的兩隻狗；象徵厚顏、欺騙、不誠實及挑起爭端。"},
+{sign:"天蠍座",range:"20°–30°",planet:"金星",symbol:"♀",meaning:"放縱、憤怒、暴力",tarot:"聖杯七",agrippa:"跪地男子遭女子持杖擊打；象徵醉酒、淫亂、憤怒、暴力與爭鬥。"},
+{sign:"射手座",range:"0°–10°",planet:"水星",symbol:"☿",meaning:"勇氣、自由、衝動",tarot:"權杖八",agrippa:"身披鎧甲、手持出鞘之劍的男子；象徵勇敢、惡意與自由。"},
+{sign:"射手座",range:"10°–20°",planet:"月亮",symbol:"☽",meaning:"悲傷、恐懼、脆弱",tarot:"權杖九",agrippa:"哭泣且以衣物包覆自己的女子；象徵悲傷，以及對自身身體的恐懼。"},
+{sign:"射手座",range:"20°–30°",planet:"土星",symbol:"♄",meaning:"固執、爭鬥、惡意",tarot:"權杖十",agrippa:"金色外貌的男子或持杖閒坐的人；象徵執著於自身意志、固執、作惡、爭鬥與可怕之事。"},
+{sign:"摩羯座",range:"0°–10°",planet:"木星",symbol:"♃",meaning:"得失、變動、旅行",tarot:"錢幣二",agrippa:"一名女子與一名攜帶滿袋物品的男子；象徵出行與歡樂，也包含得失、軟弱及卑下處境。"},
+{sign:"摩羯座",range:"10°–20°",planet:"火星",symbol:"♂",meaning:"建設、商業、追求不可能之事",tarot:"錢幣三",agrippa:"兩名女子、一名仰望飛鳥的男子；象徵追求無法實現之事，以及探索難以知曉的事物。"},
+{sign:"摩羯座",range:"20°–30°",planet:"太陽",symbol:"☉",meaning:"節制、謹慎、財富掌控",tarot:"錢幣四",agrippa:"貞潔而善於工作的女子，以及在桌上收集金錢的銀行家；象徵審慎、聚財與貪婪。"},
+{sign:"水瓶座",range:"0°–10°",planet:"金星",symbol:"♀",meaning:"勞苦、貧困、競爭",tarot:"寶劍五",agrippa:"謹慎的男子與紡紗女子；象徵為了獲利而付出的思慮與勞動，也包括貧困與卑微。"},
+{sign:"水瓶座",range:"10°–20°",planet:"水星",symbol:"☿",meaning:"理解、謙遜、自由",tarot:"寶劍六",agrippa:"長鬍子的男子；象徵理解力、溫和、謙遜、自由與良好禮儀。"},
+{sign:"水瓶座",range:"20°–30°",planet:"月亮",symbol:"☽",meaning:"傲慢、無禮、逞強",tarot:"寶劍七",agrippa:"一名黑膚且憤怒的男子；象徵傲慢、無禮與厚顏。"},
+{sign:"雙魚座",range:"0°–10°",planet:"土星",symbol:"♄",meaning:"旅行、遷移、財物追求",tarot:"聖杯八",agrippa:"肩負重物、衣著整齊的男子；象徵旅行、改變居所，以及謹慎追求財富與衣物。"},
+{sign:"雙魚座",range:"10°–20°",planet:"木星",symbol:"♃",meaning:"願望、抱負、崇高追求",tarot:"聖杯九",agrippa:"容貌姣好、裝飾華麗的女子；象徵渴望並努力追求崇高、偉大的事物。"},
+{sign:"雙魚座",range:"20°–30°",planet:"火星",symbol:"♂",meaning:"休息、享樂、慾望",tarot:"聖杯十",agrippa:"裸身男子或青年，身旁有頭戴花冠的美麗女子；象徵休息、閒逸、歡愉、淫逸及男女親密關係。"}
+];
+const signs=["牡羊座","金牛座","雙子座","巨蟹座","獅子座","處女座","天秤座","天蠍座","射手座","摩羯座","水瓶座","雙魚座"];
+const colors=["#f3d6d0","#f3e3bf","#d7e9e8","#dce5f6","#f5dfb4","#dfead6","#e6ddf4","#e8d7e4","#f5dfce","#d9e0e9","#d9e9ed","#d9e4f3"];
+const svgNS="http://www.w3.org/2000/svg", svg=document.getElementById("wheel");
+function el(tag,attrs={},text){const n=document.createElementNS(svgNS,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,v);if(text!==undefined)n.textContent=text;return n}
+function polar(cx,cy,r,deg){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy-r*Math.sin(a)]}
+function wedgePath(cx,cy,r1,r2,a1,a2){const p1=polar(cx,cy,r2,a1),p2=polar(cx,cy,r2,a2),p3=polar(cx,cy,r1,a2),p4=polar(cx,cy,r1,a1);const large=Math.abs(a2-a1)>180?1:0;return `M ${p1} A ${r2} ${r2} 0 ${large} 0 ${p2} L ${p3} A ${r1} ${r1} 0 ${large} 1 ${p4} Z`}
+function drawWheel(){
+ const cx=260,cy=260,outer=238,inner=82,signInner=174;
+ // Aries centered at 180 degrees (left). Zodiac proceeds counterclockwise.
+ decans.forEach((d,i)=>{
+   const signIndex=Math.floor(i/3),within=i%3;
+   const center=180+signIndex*30+within*10+5;
+   const a1=center+5,a2=center-5;
+   const p=el("path",{d:wedgePath(cx,cy,signInner,outer,a1,a2),fill:colors[signIndex],class:"sector",tabindex:"0",role:"button","aria-label":`${d.sign} ${d.range} ${d.planet} ${d.tarot}`,"data-index":i});
+   p.addEventListener("click",()=>selectDecan(i));p.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();selectDecan(i)}});
+   svg.appendChild(p);
+   const [tx,ty]=polar(cx,cy,204,center);
+   svg.appendChild(el("text",{x:tx,y:ty,class:"wheel-sign"},d.symbol));
+ });
+ // Inner ring: zodiac names at the middle of each sign sector
+ signs.forEach((s,si)=>{
+   const center=180+si*30+15,[x,y]=polar(cx,cy,157,center);
+   svg.appendChild(el("text",{x,y,class:"wheel-sign","font-size":"13"},s.replace("座","")));
+ });
+ svg.appendChild(el("circle",{cx,cy,r:80,fill:"#393454",stroke:"#fff","stroke-width":"3"}));
+ svg.appendChild(el("text",{x:cx,y:cy-9,class:"center-label"},"36 旬星"));
+ svg.appendChild(el("text",{x:cx,y:cy+10,class:"center-sub"},"牡羊9點・逆時針"));
+ svg.appendChild(el("text",{x:cx,y:cy+26,class:"center-sub"},"點選旬區查詢"));
+}
+function selectDecan(i){
+ const d=decans[i];
+ document.querySelectorAll(".sector").forEach(n=>n.classList.toggle("selected",Number(n.dataset.index)===i));
+ document.querySelectorAll("#rows tr").forEach(n=>n.classList.toggle("active",Number(n.dataset.index)===i));
+ document.getElementById("selectedInfo").innerHTML=`<h3>${d.sign} ${d.range}（第${i+1}旬／共36旬）</h3><p><b>代表行星：</b><span class="symbol">${d.symbol}</span> ${d.planet}</p><p><b>含義：</b>${d.meaning}</p><p><b>對應塔羅牌：</b>${d.tarot}</p><p><b>阿格里帕解釋：</b>${d.agrippa}</p>`;
+}
+function renderTable(){
+ const tbody=document.getElementById("rows");
+ decans.forEach((d,i)=>{
+  const tr=document.createElement("tr");tr.dataset.index=i;
+  tr.innerHTML=`<td>${d.sign}<br><small>${d.range}</small></td><td><span class="symbol">${d.symbol}</span> ${d.planet}</td><td>${d.meaning}</td><td>${d.tarot}</td><td>${d.agrippa}</td>`;
+  tr.addEventListener("click",()=>selectDecan(i));tbody.appendChild(tr);
+ });
+ const filter=document.getElementById("signFilter");
+ signs.forEach(s=>{const o=document.createElement("option");o.value=s;o.textContent=s;filter.appendChild(o)});
+}
+function applyFilters(){
+ const q=document.getElementById("search").value.trim().toLowerCase(),s=document.getElementById("signFilter").value;
+ document.querySelectorAll("#rows tr").forEach((tr,i)=>{
+  const d=decans[i],text=[d.sign,d.range,d.planet,d.symbol,d.meaning,d.tarot,d.agrippa].join(" ").toLowerCase();
+  tr.style.display=(!s||d.sign===s)&&(!q||text.includes(q))?"":"none";
+ });
+}
+drawWheel();renderTable();selectDecan(0);
+document.getElementById("search").addEventListener("input",applyFilters);
+document.getElementById("signFilter").addEventListener("change",applyFilters);
+</script>
+</body>
+</html>

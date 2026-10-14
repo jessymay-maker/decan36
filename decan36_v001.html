@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>西占 36 旬星對照盤 decan36_v001</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#181c2e; --ink:#e8eaf2; --muted:#9aa0b8;
+    --fire:#e2564a; --earth:#4a9e6b; --air:#d8b34a; --water:#4a7fe2;
+    --line:#2a3050; --accent:#ffd479;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0b0e18,#12162a 60%);color:var(--ink);
+       font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;line-height:1.6}
+  header{padding:28px 20px 10px;text-align:center}
+  h1{margin:0;font-size:22px;letter-spacing:.5px}
+  header p{margin:6px 0 0;color:var(--muted);font-size:13px}
+  .wrap{max-width:1080px;margin:0 auto;padding:10px 16px 60px}
+  .wheelbox{display:flex;justify-content:center;margin:10px 0 6px}
+  svg{max-width:100%;height:auto}
+  /* 狀態顯示欄 */
+  #status{max-width:760px;margin:6px auto 26px;background:var(--panel);border:1px solid var(--line);
+          border-radius:12px;padding:14px 18px;min-height:96px}
+  #status .st-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  #status .sym{font-size:30px;line-height:1}
+  #status .ttl{font-size:16px;font-weight:700}
+  #status .badge{font-size:12px;color:#0b0e18;background:var(--accent);border-radius:999px;padding:2px 10px}
+  #status .row{margin-top:6px;font-size:13px;color:var(--muted)}
+  #status .row b{color:var(--ink);font-weight:600}
+  #status .tarot{color:var(--accent);font-weight:700}
+  .hint{text-align:center;color:var(--muted);font-size:12px;margin:0 0 18px}
+  h2{font-size:17px;margin:30px 0 10px;border-left:3px solid var(--accent);padding-left:10px}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:var(--panel);
+        border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:#20263d;color:var(--accent);font-weight:600;position:sticky;top:0}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#222842}
+  .psym{font-size:18px}
+  .num{color:var(--muted);font-variant-numeric:tabular-nums}
+  .tk{color:var(--accent)}
+  .note{background:#161a2b;border:1px solid var(--line);border-left:3px solid var(--fire);
+        border-radius:8px;padding:12px 16px;font-size:13px;color:#cfd3e6;margin-top:22px}
+  .note b{color:var(--ink)}
+  .swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+</style>
+</head>
+<body>
+<header>
+  <h1>西洋占星 · 三十六旬星對照盤 <span style="color:var(--muted);font-size:13px">decan36_v001</span></h1>
+  <p>圓盤:白羊座位於 9 點鐘(左側第一宮),十二宮逆時針排列。圓盤格子僅示行星,塔羅牌顯示於下方狀態欄。</p>
+</header>
+
+<div class="wrap">
+  <div class="wheelbox">
+    <svg id="wheel" viewBox="0 0 640 640" role="img" aria-label="三十六旬星圓盤"></svg>
+  </div>
+
+  <div id="status">
+    <div class="st-top">
+      <span class="sym" id="s-sym">✦</span>
+      <span class="ttl" id="s-ttl">36 旬星對照盤</span>
+      <span class="badge" id="s-badge">將游標移到圓盤或下表</span>
+    </div>
+    <div class="row" id="s-mean"><b>含義:</b>—</div>
+    <div class="row" id="s-tarot"><b>對應塔羅:</b><span class="tarot">—</span></div>
+    <div class="row" id="s-agri"><b>阿格里帕(所屬行星德性):</b>—</div>
+  </div>
+  <p class="hint">※ 指向圓盤任一旬格或下方表格任一列,狀態欄即同步顯示該旬的塔羅牌。</p>
+
+  <h2>條列式對照表(36 旬全列)</h2>
+  <table id="tbl">
+    <thead>
+      <tr>
+        <th style="width:44px">#</th>
+        <th style="width:118px">黃道區間</th>
+        <th style="width:70px">行星</th>
+        <th style="width:44px">符號</th>
+        <th>含義</th>
+        <th style="width:150px">對應塔羅(黃金黎明)</th>
+        <th style="width:230px">阿格里帕解釋(該行星屬性)</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="note">
+    <b>三個易踩的雷:</b><br>
+    1. <b>阿格里帕 ≠ 黃金黎明</b>:阿格里帕只給「迦勒底循環」的行星配置;塔羅那欄是黃金黎明 1890 年代系統。<br>
+    2. <b>行星與塔羅不是同一套序</b>:塔羅「數位×元素」的內在邏輯來自星座元素,與該旬的迦勒底行星無關,對不上是正常的。<br>
+    3. <b>埃及「面」系統不同</b>:古埃及/托勒密的面守護神(神名)是另一張表。
+  </div>
+</div>
+
+<script>
+/* ---------- 資料 ---------- */
+const SIGNS = ["白羊","金牛","雙子","巨蟹","獅子","處女","天秤","天蠍","射手","摩羯","水瓶","雙魚"];
+const ELEM  = ["fire","earth","air","water","fire","earth","air","water","fire","earth","air","water"];
+const ECOL  = {fire:"#e2564a",earth:"#4a9e6b",air:"#d8b34a",water:"#4a7fe2"};
+
+/* 每星座三旬的行星(迦勒底順序,自白羊♂起) */
+const DECAN_PLANETS = [
+  ["♂","☉","♀"], // 白羊
+  ["☿","☽","♄"], // 金牛
+  ["♃","♂","☉"], // 雙子
+  ["♀","☿","☽"], // 巨蟹
+  ["♄","♃","♂"], // 獅子
+  ["☉","♀","☿"], // 處女
+  ["☽","♄","♃"], // 天秤
+  ["♂","☉","♀"], // 天蠍
+  ["☿","☽","♄"], // 射手
+  ["♃","♂","☉"], // 摩羯
+  ["♀","☿","☽"], // 水瓶
+  ["♄","♃","♂"]  // 雙魚
+];
+const PNAME = {"♂":"Mars 火星","☉":"Sun 太陽","♀":"Venus 金星","☿":"Mercury 水星","☽":"Moon 月亮","♄":"Saturn 土星","♃":"Jupiter 木星"};
+const PDESC = {
+  "♂":"火星司戰爭、鬥志、切割、熱與火;賦予大膽與衝突",
+  "☉":"太陽為生命之源、王者、光明、榮耀與統御",
+  "♀":"金星主愛慾、美、和諧、友誼與愉悅",
+  "☿":"水星主言語、理智、學習、商業、機巧與變化",
+  "☽":"月亮主生育、潮汐、夢、滋養、變化與流動",
+  "♄":"土星主時間、束縛、農事、隱忍、結構與沉重",
+  "♃":"木星主膨脹、恩惠、法律、宗教、豐盛與節制之德"
+};
+const MEAN = {
+  "白羊":["開創、勇氣、行動力、衝勁","生命力、自尊、領導、顯化","愛、美、吸引力、和諧"],
+  "金牛":["思維、溝通、交易、機敏","情感、滋養、直覺、週期","紀律、限制、責任、時間"],
+  "雙子":["擴張、幸運、智慧、成長","機智的爭辯、銳利、競爭","心智的自信、表達、光芒"],
+  "巨蟹":["家庭之愛、溫情、保護","情感溝通、記憶、同理","母性、深層情感、本能"],
+  "獅子":["自我節制、持重、考驗","慷慨、尊榮、創造的擴張","熱情、支配、意志力"],
+  "處女":["精密、服務的才智、專注","純淨、務實的愛、細緻","分析、批判、技術智力"],
+  "天秤":["關係中的情感、協調","公平、契約、責任的平衡","寬容、正義、社會的和諧"],
+  "天蠍":["深層意志、蛻變、攻擊性","洞察、再生、核心力量","激情、神秘之愛、佔有慾"],
+  "射手":["探索的心智、哲思、遠見","直覺的擴展、旅行的情感","信念的紀律、務實的目標"],
+  "摩羯":["抱負、建構、社會成就","毅力、野心、克服阻礙","責任、功業、穩固的權威"],
+  "水瓶":["博愛、友誼、理想之愛","創新思維、發明、科學","群體的直覺、理想主義"],
+  "雙魚":["情感的界線、犧牲、業力","慈悲、靈性擴展、救贖","靈性行動、慈悲的突破"]
+};
+/* 塔羅(黃金黎明 36 小牌) */
+const TAROT = [
+  ["權杖二 2 of Wands","權杖三 3 of Wands","權杖四 4 of Wands"],
+  ["錢幣五 5 of Pentacles","錢幣六 6 of Pentacles","錢幣七 7 of Pentacles"],
+  ["寶劍八 8 of Swords","寶劍九 9 of Swords","寶劍十 10 of Swords"],
+  ["聖杯二 2 of Cups","聖杯三 3 of Cups","聖杯四 4 of Cups"],
+  ["權杖五 5 of Wands","權杖六 6 of Wands","權杖七 7 of Wands"],
+  ["錢幣八 8 of Pentacles","錢幣九 9 of Pentacles","錢幣十 10 of Pentacles"],
+  ["寶劍二 2 of Swords","寶劍三 3 of Swords","寶劍四 4 of Swords"],
+  ["聖杯五 5 of Cups","聖杯六 6 of Cups","聖杯七 7 of Cups"],
+  ["權杖八 8 of Wands","權杖九 9 of Wands","權杖十 10 of Wands"],
+  ["錢幣二 2 of Pentacles","錢幣三 3 of Pentacles","錢幣四 4 of Pentacles"],
+  ["寶劍五 5 of Swords","寶劍六 6 of Swords","寶劍七 7 of Swords"],
+  ["聖杯八 8 of Cups","聖杯九 9 of Cups","聖杯十 10 of Cups"]
+];
+
+/* ---------- 幾何工具 ---------- */
+const CX=320, CY=320;
+const R_OUT=300, R_SIGN=252, R_IN=210, R_HUB=96;
+const d2r = d => d*Math.PI/180;
+function polar(r, svgDeg){ // SVG: 0=3點, 90=6點, 180=9點, 270=12點
+  const a = d2r(svgDeg);
+  return [CX + r*Math.cos(a), CY + r*Math.sin(a)];
+}
+// 黃道角 → SVG角。 白羊0° 放 9點(180°), 逆時針 => SVG = 180 - zodiac
+const zod2svg = z => 180 - z;
+
+function sectorPath(r1, r2, svgA, svgB){
+  // 由 svgA 逆時針到 svgB (svgB < svgA)
+  const [x1,y1]=polar(r1,svgA), [x2,y2]=polar(r2,svgA);
+  const [x3,y3]=polar(r2,svgB), [x4,y4]=polar(r1,svgB);
+  const large = 0;
+  const sweep = 0; // 逆時針(角度遞減)
+  return `M ${x1} ${y1} L ${x2} ${y2} A ${r2} ${r2} 0 ${large} ${sweep} ${x3} ${y3} L ${x4} ${y4} A ${r1} ${r1} 0 ${large} ${sweep} ${x1} ${y1} Z`;
+}
+
+/* ---------- 繪製圓盤 ---------- */
+const NS="http://www.w3.org/2000/svg";
+const svg=document.getElementById("wheel");
+function el(t,attrs={}){const e=document.createElementNS(NS,t);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+// 外框
+svg.appendChild(el("circle",{cx:CX,cy:CY,r:R_OUT,fill:"#12162a",stroke:"#2a3050","stroke-width":2}));
+svg.appendChild(el("circle",{cx:CX,cy:CY,r:R_SIGN,fill:"#181c2e",stroke:"#2a3050","stroke-width":1}));
+svg.appendChild(el("circle",{cx:CX,cy:CY,r:R_IN,fill:"#0f1220",stroke:"#2a3050","stroke-width":1}));
+svg.appendChild(el("circle",{cx:CX,cy:CY,r:R_HUB,fill:"#181c2e",stroke:"#2a3050","stroke-width":1}));
+
+const decanEls = []; // {path, idx}
+
+// 36 旬格(介於 R_IN 與 R_SIGN 之間)
+for(let s=0;s<12;s++){
+  for(let d=0;d<3;d++){
+    const idx = s*3+d;
+    const z0 = s*30 + d*10, z1 = z0 + 10;
+    const svgA = zod2svg(z0);   // 大
+    const svgB = zod2svg(z1);   // 小
+    const p = el("path",{
+      d: sectorPath(R_IN, R_SIGN, svgA, svgB),
+      fill: ECOL[ELEM[s]],
+      "fill-opacity": 0.16,
+      stroke:"#2a3050",
+      "stroke-width":1,
+      "data-idx": idx,
+      style:"cursor:pointer;transition:fill-opacity .15s"
+    });
+    svg.appendChild(p);
+    decanEls.push(p);
+
+    // 旬內行星符號
+    const mid = zod2svg((z0+z1)/2);
+    const [px,py]=polar((R_IN+R_SIGN)/2, mid);
+    const t=el("text",{x:px,y:py+7,"text-anchor":"middle","font-size":"26",fill:"#e8eaf2"});
+    t.textContent = DECAN_PLANETS[s][d];
+    svg.appendChild(t);
+  }
+}
+
+// 星座名(外環)與分隔線
+for(let s=0;s<12;s++){
+  const z0=s*30, z1=z0+30;
+  const mid=zod2svg((z0+z1)/2);
+  const [ax,ay]=polar(R_SIGN, mid), [bx,by]=polar(R_OUT, mid);
+  const [tx,ty]=polar((R_SIGN+R_OUT)/2, mid);
+  svg.appendChild(el("line",{x1:ax,y1:ay,x2:bx,y2:by,stroke:"#2a3050","stroke-width":1}));
+  const t=el("text",{x:tx,y:ty+6,"text-anchor":"middle","font-size":"18",
+                     fill:ECOL[ELEM[s]],"font-weight":"700"});
+  t.textContent = SIGNS[s];
+  svg.appendChild(t);
+}
+// 星座間分隔線(0/30/60...)
+for(let s=0;s<12;s++){
+  const sv=zod2svg(s*30);
+  const [ax,ay]=polar(R_IN,sv), [bx,by]=polar(R_OUT,sv);
+  svg.appendChild(el("line",{x1:ax,y1:ay,x2:bx,y2:by,stroke:"#2a3050","stroke-width":1.5}));
+}
+// 四軸方位提示
+const AX={ "9點·白羊0°(第1宮)":180, "6點·巨蟹0°":90, "3點·天秤0°":0, "12點·摩羯0°":270 };
+// 中央
+const hub=el("text",{x:CX,y:CY-8,"text-anchor":"middle","font-size":"17",fill:"#ffd479","font-weight":"700"});
+hub.textContent="36 旬星";
+svg.appendChild(hub);
+const hub2=el("text",{x:CX,y:CY+16,"text-anchor":"middle","font-size":"12",fill:"#9aa0b8"});
+hub2.textContent="Decans";
+svg.appendChild(hub2);
+// 四方位小標
+Object.entries(AX).forEach(([label,svgDeg])=>{
+  const [x,y]=polar(R_OUT-2, svgDeg);
+  const t=el("text",{x,y:y+4,"text-anchor":"middle","font-size":"11",fill:"#6f7590"});
+  t.textContent="·";
+  svg.appendChild(t);
+});
+
+/* ---------- 狀態欄 ---------- */
+const S={
+  sym:document.getElementById("s-sym"),
+  ttl:document.getElementById("s-ttl"),
+  badge:document.getElementById("s-badge"),
+  mean:document.getElementById("s-mean"),
+  tarot:document.getElementById("s-tarot"),
+  agri:document.getElementById("s-agri")
+};
+function show(idx){
+  const s=Math.floor(idx/3), d=idx%3;
+  const pl=DECAN_PLANETS[s][d];
+  const z0=s*30+d*10;
+  S.sym.textContent=pl;
+  S.ttl.textContent=`${SIGNS[s]}座 第 ${d+1} 旬 · ${PNAME[pl]}`;
+  S.badge.textContent=`黃道 ${z0}°–${z0+10}°`;
+  S.mean.innerHTML="<b>含義:</b>"+MEAN[SIGNS[s]][d];
+  S.tarot.innerHTML='<b>對應塔羅:</b><span class="tarot">'+TAROT[s][d]+"</span>";
+  S.agri.innerHTML="<b>阿格里帕(所屬行星德性):</b>"+PDESC[pl];
+}
+function clearSel(){
+  decanEls.forEach(p=>p.setAttribute("fill-opacity",0.16));
+}
+decanEls.forEach(p=>{
+  p.addEventListener("mouseenter",()=>{
+    clearSel();
+    p.setAttribute("fill-opacity",0.42);
+    show(+p.dataset.idx);
+  });
+  p.addEventListener("click",()=>show(+p.dataset.idx));
+});
+
+/* ---------- 表格 ---------- */
+const tb=document.querySelector("#tbl tbody");
+for(let s=0;s<12;s++){
+  for(let d=0;d<3;d++){
+    const idx=s*3+d, pl=DECAN_PLANETS[s][d];
+    const z0=s*30+d*10;
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td class="num">${idx+1}</td>
+      <td><span class="swatch" style="background:${ECOL[ELEM[s]]}"></span>${SIGNS[s]} ${z0}°–${z0+10}°</td>
+      <td>${PNAME[pl]}</td>
+      <td class="psym">${pl}</td>
+      <td>${MEAN[SIGNS[s]][d]}</td>
+      <td class="tk">${TAROT[s][d]}</td>
+      <td>${PDESC[pl]}</td>`;
+    tr.addEventListener("mouseenter",()=>show(idx));
+    tb.appendChild(tr);
+  }
+}
+</script>
+</body>
+</html>

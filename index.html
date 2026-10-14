@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>36旬回歸制占星程式 & 卜卦張力計算 | 星圖工具彙整</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: rgba(255, 255, 255, 0.75);
+      --card-border: rgba(218, 165, 32, 0.3);
+      --card-hover-border: rgba(184, 134, 11, 0.8);
+      --text-main: #1e293b;
+      --text-sub: #475569;
+      --accent-gold: #b8860b;
+      --accent-gold-bright: #d4af37;
+      --accent-purple: #7e22ce;
+      --accent-blue: #0284c7;
+      --accent-rose: #e11d48;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Serif TC', serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow-x: hidden;
+      padding: 2.5rem 1rem;
+    }
+
+    /* ── 明亮動態光暈背景 ── */
+    .glow-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+    }
+
+    .glow-ball {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.55;
+      animation: floatGlow 16s infinite alternate ease-in-out;
+    }
+
+    /* 金陽暖光 */
+    .glow-1 {
+      width: 550px;
+      height: 550px;
+      background: radial-gradient(circle, rgba(254, 240, 138, 0.8) 0%, rgba(253, 224, 71, 0.3) 60%, transparent 80%);
+      top: -10%;
+      right: 5%;
+    }
+
+    /* 柔紫天光 */
+    .glow-2 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(233, 213, 255, 0.8) 0%, rgba(192, 132, 252, 0.3) 60%, transparent 80%);
+      bottom: -10%;
+      left: 5%;
+      animation-delay: -5s;
+    }
+
+    /* 水藍晨光 */
+    .glow-3 {
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(186, 230, 253, 0.8) 0%, rgba(56, 189, 248, 0.3) 60%, transparent 80%);
+      top: 35%;
+      left: 45%;
+      transform: translate(-50%, -50%);
+      animation-delay: -9s;
+    }
+
+    @keyframes floatGlow {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(35px, 45px) scale(1.1); }
+      100% { transform: translate(-30px, -35px) scale(0.95); }
+    }
+
+    /* ── 標題區 ── */
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      max-width: 850px;
+      z-index: 1;
+    }
+
+    header h1 {
+      font-family: 'Cinzel', 'Noto Serif TC', serif;
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #1e293b 0%, #b8860b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.75rem;
+      text-shadow: 0 2px 15px rgba(218, 165, 32, 0.2);
+    }
+
+    header p {
+      color: var(--text-sub);
+      font-size: 1.05rem;
+      letter-spacing: 1px;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+
+    /* ── 主要內容 ── */
+    main {
+      width: 100%;
+      max-width: 1100px;
+      z-index: 1;
+    }
+
+    .category-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin: 2.5rem 0 1.2rem 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 2px solid rgba(184, 134, 11, 0.25);
+      padding-bottom: 0.5rem;
+    }
+
+    .category-title::before {
+      content: '✦';
+      font-size: 1.1rem;
+      color: var(--accent-gold-bright);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* ── 卡片樣式（亮色透光 Glassmorphism） ── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.6rem;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      transition: 0.6s;
+    }
+
+    .card:hover::before {
+      left: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: var(--card-hover-border);
+      box-shadow: 0 20px 30px -10px rgba(184, 134, 11, 0.2), 0 10px 15px -5px rgba(0, 0, 0, 0.04);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .card-tag {
+      display: inline-block;
+      align-self: flex-start;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    }
+
+    .tag-fable  { color: #c05621; border-color: rgba(194, 86, 33, 0.3); background: #fffaf0; }
+    .tag-gemini { color: #1d4ed8; border-color: rgba(29, 78, 216, 0.3); background: #eff6ff; }
+    .tag-claude { color: #7c2d12; border-color: rgba(124, 45, 18, 0.3); background: #fff7ed; }
+    .tag-gpt    { color: #15803d; border-color: rgba(21, 128, 61, 0.3); background: #f0fdf4; }
+    .tag-horary { color: #b45309; border-color: rgba(180, 83, 9, 0.3); background: #fffbeb; }
+
+    .card h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: var(--text-main);
+    }
+
+    .card p {
+      font-size: 0.92rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      color: var(--accent-gold);
+      font-weight: 700;
+    }
+
+    .card-footer span {
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-footer span {
+      transform: translateX(6px);
+    }
+
+    /* ── 頁尾 ── */
+    footer {
+      margin-top: 4rem;
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 1;
+    }
+
+    /* ── RWD 響應式 ── */
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.8rem; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 明亮動態背景 -->
+  <div class="glow-container">
+    <div class="glow-ball glow-1"></div>
+    <div class="glow-ball glow-2"></div>
+    <div class="glow-ball glow-3"></div>
+  </div>
+
+  <!-- 標題區 -->
+  <header>
+    <h1>36 旬回歸制占星與卜卦工具彙整</h1>
+    <p>典雅 · 明亮 · 精準的古典與現代占星量化工具集</p>
+  </header>
+
+  <!-- 主內容區 -->
+  <main>
+
+    <!-- 1. 置頂：西洋占星 · 三十六旬星對照盤 (Fable v001 / v002) -->
+    <div class="category-title">西洋占星 · 三十六旬星對照盤</div>
+    <div class="grid">
+
+      <!-- Fable v001 -->
+      <a href="decan36_v001.html" class="card">
+        <div>
+          <span class="card-tag tag-fable">Fable v001</span>
+          <h2>西洋占星 · 三十六旬星對照盤</h2>
+          <p>古典典雅風格呈現，完整對照黃道十二星座與 36 旬星之主宰關係。</p>
+        </div>
+        <div class="card-footer">
+          開啟對照盤 <span>→</span>
+        </div>
+      </a>
+
+      <!-- Fable v002 -->
+      <a href="decan36_v002.html" class="card">
+        <div>
+          <span class="card-tag tag-fable">Fable v002</span>
+          <h2>西洋占星 · 三十六旬星對照盤 v002</h2>
+          <p>視覺進化版本，提升細節排版與清晰度，便於快速對照旬星與宮位屬性。</p>
+        </div>
+        <div class="card-footer">
+          開啟對照盤 <span>→</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- 2. 中間：其他 36 旬星圖表與圓盤 -->
+    <div class="category-title">36 旬星圓盤與查詢工具</div>
+    <div class="grid">
+
+      <!-- Gemini -->
+      <a href="8-36_decans_astrology_wheel.html" class="card">
+        <div>
+          <span class="card-tag tag-gemini">Gemini</span>
+          <h2>36旬回歸制占星輪盤</h2>
+          <p>動態展示 36 旬回歸制星圖輪盤，提供直觀的圓形黃道分區視覺。</p>
+        </div>
+        <div class="card-footer">
+          開啟輪盤 <span>→</span>
+        </div>
+      </a>
+
+      <!-- Claude v01 -->
+      <a href="decan36_v01.html" class="card">
+        <div>
+          <span class="card-tag tag-claude">Claude v01</span>
+          <h2>西占盤 36 旬圓盤與條列</h2>
+          <p>雙軸檢視：結合幾何圓盤與條理分明的文字表格對照。</p>
+        </div>
+        <div class="card-footer">
+          開啟工具 <span>→</span>
+        </div>
+      </a>
+
+      <!-- Claude v02 -->
+      <a href="decan36_v02.html" class="card">
+        <div>
+          <span class="card-tag tag-claude">Claude v02</span>
+          <h2>西占盤 36 旬圓盤與條列 2</h2>
+          <p>包含互動優化與多層次檢視功能，方便深層調研旬星資訊。</p>
+        </div>
+        <div class="card-footer">
+          開啟工具 <span>→</span>
+        </div>
+      </a>
+
+      <!-- GPT v2 -->
+      <a href="decan36_v2.html" class="card">
+        <div>
+          <span class="card-tag tag-gpt">GPT v2</span>
+          <h2>西洋占星 36旬星｜圓盤與查詢表 v2</h2>
+          <p>包含圓盤展示與靈活的卡片/查詢表對照，極具簡潔實用性。</p>
+        </div>
+        <div class="card-footer">
+          開啟查詢表 <span>→</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- 3. 最下方：卜卦占星張力量化計算器 -->
+    <div class="category-title">卜卦占星量化分析</div>
+    <div class="grid">
+      <a href="卜卦占星張力計算.html" class="card">
+        <div>
+          <span class="card-tag tag-horary">Horary Astrology</span>
+          <h2>卜卦盤張力量化計算器</h2>
+          <p>針對卜卦星盤進行精密行星力量、互容相位與整體張力結構的數據化計算。</p>
+        </div>
+        <div class="card-footer">
+          開啟計算器 <span>→</span>
+        </div>
+      </a>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2026 36旬回歸制占星程式-雷諾曼-塔羅 程式 | GitHub Pages & Hugging Face Spaces Ready</p>
+  </footer>
+
+</body>
+</html>
