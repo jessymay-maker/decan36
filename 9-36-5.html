@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>36旬回歸制占星 — 三軸定位鎖鏈推演儀</title>
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 載入 Google Fonts: Noto Serif TC 與 Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['"Noto Serif TC"', 'serif'],
+                    },
+                    colors: {
+                        ink: {
+                            DEFAULT: '#1e293b',
+                            deep: '#0f172a',
+                            muted: '#475569'
+                        },
+                        amberGold: {
+                            light: '#fef3c7',
+                            DEFAULT: '#b45309',
+                            dark: '#78350f',
+                            accent: '#d97706'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 明亮色系毛玻璃 (Light Glassmorphism) 基礎背景 */
+        body {
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 45%, #f6efe6 100%);
+            background-attachment: fixed;
+            color: #1e293b;
+        }
+        /* 裝飾性光暈球体，增強毛玻璃穿透層次 */
+        .bg-orb-1 {
+            position: fixed;
+            top: -8%;
+            left: -5%;
+            width: 42vw;
+            height: 42vw;
+            border-radius: 9999px;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.16) 0%, rgba(251, 191, 36, 0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bg-orb-2 {
+            position: fixed;
+            bottom: -10%;
+            right: -5%;
+            width: 46vw;
+            height: 46vw;
+            border-radius: 9999px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(99, 102, 241, 0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        /* 核心磨砂玻璃卡片樣式 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.92);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.06);
+        }
+        .glass-subcard {
+            background: rgba(255, 255, 255, 0.58);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+        }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(217, 119, 6, 0.2);
+            box-shadow: 0 4px 20px rgba(31, 38, 135, 0.04);
+        }
+        /* 自訂捲軸 */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(241, 245, 249, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(180, 83, 9, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(180, 83, 9, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-amber-200 selection:text-ink-deep pb-20 relative">
+
+    <!-- 背景柔光光暈 -->
+    <div class="bg-orb-1"></div>
+    <div class="bg-orb-2"></div>
+
+    <!-- ==================== 頂部導覽與存檔管理列 ==================== -->
+    <header class="glass-header sticky top-0 z-40">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 py-3.5 flex flex-col lg:flex-row items-center justify-between gap-3">
+            <!-- 品牌標題 -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-100 to-amber-50 border border-amber-300/80 flex items-center justify-center text-amber-700 text-xl font-bold shadow-sm shrink-0">
+                    ✧
+                </div>
+                <div>
+                    <h1 class="font-serif text-lg sm:text-xl font-bold text-ink-deep tracking-wide">
+                        36旬回歸制占星 · <span class="text-amber-700">三軸定位鎖鏈推演儀</span>
+                    </h1>
+                    <p class="text-[11px] text-slate-600">
+                        命主鏈 × 時主鏈 × 用神鏈 ｜ 度分精算・迦勒底旬主傳導・後天12宮・阿格里帕・塔羅・黃道人體
+                    </p>
+                </div>
+            </div>
+
+            <!-- 存檔與分頁控制 -->
+            <div class="flex flex-wrap items-center justify-center gap-2">
+                <!-- 本機存檔讀取選單 -->
+                <div class="flex items-center bg-white/80 border border-slate-200/90 rounded-xl px-2 py-1 shadow-sm">
+                    <select id="saved-records-select" onchange="loadFromLocalStorage()" class="bg-transparent text-xs text-ink-deep font-medium focus:outline-none max-w-[155px] sm:max-w-[195px] py-1">
+                        <option value="">-- 載入本機存檔 (0筆) --</option>
+                    </select>
+                    <button onclick="requestDeleteRecord()" title="刪除此筆存檔" class="ml-1 px-1.5 py-1 text-xs text-rose-600 hover:bg-rose-50 rounded-lg transition">
+                        ✕
+                    </button>
+                </div>
+
+                <!-- JSON 匯出與匯入 -->
+                <button onclick="exportToJSON()" class="px-3 py-1.5 rounded-xl bg-white/85 hover:bg-amber-50 border border-amber-300/70 text-xs font-semibold text-amber-800 shadow-sm transition flex items-center gap-1">
+                    <span>⬇</span> 匯出JSON
+                </button>
+                <label class="px-3 py-1.5 rounded-xl bg-white/85 hover:bg-amber-50 border border-amber-300/70 text-xs font-semibold text-amber-800 shadow-sm transition flex items-center gap-1 cursor-pointer">
+                    <span>⬆</span> 匯入JSON
+                    <input type="file" id="import-json-input" accept=".json" onchange="importFromJSON(event)" class="hidden">
+                </label>
+
+                <!-- 主分頁切換 -->
+                <div class="flex bg-slate-200/70 p-1 rounded-xl border border-white/80 ml-1">
+                    <button id="tab-analyzer" onclick="switchTab('analyzer')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-600 text-white shadow-sm">
+                        三鏈定位推演
+                    </button>
+                    <button id="tab-handbook" onclick="switchTab('handbook')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-ink-deep transition-all">
+                        36旬全表手冊
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== 主內容區 ==================== -->
+    <main class="max-w-[1440px] mx-auto px-4 sm:px-6 mt-6 relative z-10">
+
+        <!-- 視圖一：三軸定位鎖鏈推演 -->
+        <section id="view-analyzer" class="space-y-6">
+
+            <!-- 1. 盤面基礎星曜資料輸入區（度 + 分雙欄位精準輸入） -->
+            <div class="glass-card rounded-3xl p-5 sm:p-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-slate-200/70">
+                    <div>
+                        <h2 class="font-serif text-base sm:text-lg font-bold text-ink-deep flex items-center gap-2">
+                            <span class="text-amber-600">❖</span> 第一步：盤面七政精密座標（度° ＋ 分'）與後天12宮設定
+                        </h2>
+                        <p class="text-xs text-slate-600 mt-0.5">
+                            精確至角分（0°-29°59'）杜絕 10°/20° 跨旬誤差；距離交界點 30 角分內自動亮起「交界臨界」提示
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="loadPreset('career')" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300/80 shadow-sm transition">
+                            範例一：事業升遷推演
+                        </button>
+                        <button onclick="loadPreset('cusp_finance')" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200 shadow-sm transition">
+                            範例二：合約財運與交界臨界測試
+                        </button>
+                        <button onclick="toggleChartPanel()" id="toggle-chart-btn" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-white/80 hover:bg-white text-slate-700 border border-slate-300/80 shadow-sm transition">
+                            收合七政輸入表 ▲
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 雙盤七政輸入表格網格 -->
+                <div id="chart-tables-wrapper" class="space-y-5 mt-5">
+                    
+                    <!-- 上升點 (ASC) 與 最尊貴命主星 (Almuten) 快捷基準列 -->
+                    <div class="glass-subcard rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-l-4 border-l-amber-500">
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span class="px-2.5 py-1 rounded-lg bg-amber-100/80 text-amber-900 text-xs font-bold">
+                                本命上升點 (ASC) 座標
+                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <select id="natal-asc-sign" onchange="updateAscPreview()" class="bg-white/90 border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs font-medium text-ink-deep focus:outline-none focus:border-amber-500"></select>
+                                <input type="number" id="natal-asc-deg" min="0" max="29" value="12" onchange="updateAscPreview()" class="w-14 bg-white/90 border border-slate-300 rounded-xl px-2 py-1.5 text-xs font-bold text-center text-ink-deep focus:outline-none focus:border-amber-500">
+                                <span class="text-xs text-slate-500 font-bold">°</span>
+                                <input type="number" id="natal-asc-min" min="0" max="59" value="30" onchange="updateAscPreview()" class="w-14 bg-white/90 border border-slate-300 rounded-xl px-2 py-1.5 text-xs font-bold text-center text-ink-deep focus:outline-none focus:border-amber-500">
+                                <span class="text-xs text-slate-500 font-bold">'</span>
+                            </div>
+                            <span id="natal-asc-preview" class="text-xs font-semibold text-amber-800 bg-amber-50/90 px-2.5 py-1 rounded-lg border border-amber-200/70"></span>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-xs font-bold text-indigo-900 bg-indigo-100/80 px-2.5 py-1 rounded-lg">
+                                最尊貴命主星 (Almuten Figuris)
+                            </span>
+                            <select id="natal-almuten-planet" class="bg-white/90 border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-indigo-900 focus:outline-none focus:border-indigo-500">
+                                <!-- JS 填充 -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 左右雙盤表格 -->
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
+                        <!-- 左表：本命盤七政位置 -->
+                        <div class="glass-subcard rounded-2xl p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold text-indigo-900 flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> 本命盤（Natal 內圈）七政精密位置
+                                </span>
+                                <span class="text-[11px] text-slate-500 font-medium">決定命主鏈與先天根基</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs text-left">
+                                    <thead>
+                                        <tr class="text-slate-600 border-b border-slate-200/80 bg-white/40">
+                                            <th class="py-2 px-2 rounded-tl-lg">星體</th>
+                                            <th class="py-2 px-1.5">星座</th>
+                                            <th class="py-2 px-1.5">度° / 分'</th>
+                                            <th class="py-2 px-1.5">本命宮位</th>
+                                            <th class="py-2 px-2 text-right rounded-tr-lg">迦勒底旬主</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="natal-planets-tbody" class="divide-y divide-slate-200/60">
+                                        <!-- JS 動態生成 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 右表：流年即時行運盤七政位置 -->
+                        <div class="glass-subcard rounded-2xl p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> 即時行運盤（Transit 外圈）七政精密位置
+                                </span>
+                                <span class="text-[11px] text-slate-500 font-medium">決定時主鏈與動態事件觸發</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs text-left">
+                                    <thead>
+                                        <tr class="text-slate-600 border-b border-slate-200/80 bg-white/40">
+                                            <th class="py-2 px-2 rounded-tl-lg">行運星</th>
+                                            <th class="py-2 px-1.5">星座</th>
+                                            <th class="py-2 px-1.5">度° / 分'</th>
+                                            <th class="py-2 px-1.5">落本命宮</th>
+                                            <th class="py-2 px-2 text-right rounded-tr-lg">迦勒底旬主</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="transit-planets-tbody" class="divide-y divide-slate-200/60">
+                                        <!-- JS 動態生成 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. 三軸鎖鏈起點設定與存檔列 -->
+            <div class="glass-card rounded-3xl p-5 sm:p-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-slate-200/70">
+                    <div>
+                        <h2 class="font-serif text-base sm:text-lg font-bold text-ink-deep flex items-center gap-2">
+                            <span class="text-amber-600">❖</span> 第二步：選定三軸定位鎖鏈起點與案例存檔
+                        </h2>
+                        <p class="text-xs text-slate-600 mt-0.5">
+                            指定「命主星」、「流年時主星」與「事件用神主星」，系統自動向後相容追蹤直至入自管旬或互容閉環
+                        </p>
+                    </div>
+                    <!-- 本機存檔輸入框 -->
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="record-title-input" placeholder="輸入案例名稱（如：2026事業轉職）" class="bg-white/90 border border-slate-300 rounded-xl px-3 py-2 text-xs text-ink-deep font-medium focus:outline-none focus:border-amber-500 w-48 sm:w-60 shadow-sm">
+                        <button onclick="saveToLocalStorage()" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-sm transition shrink-0">
+                            💾 儲存案例
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 三軸起點選擇卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    
+                    <!-- 軸一：本命命主星 -->
+                    <div class="glass-subcard rounded-2xl p-4 border-t-4 border-t-indigo-500 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="px-2.5 py-0.5 rounded-lg bg-indigo-100 text-indigo-900 text-xs font-bold">鎖鏈一 · 本命命主鏈</span>
+                            <span class="text-[11px] text-slate-500 font-medium">追蹤本命盤定位</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">選擇命主起點依據</label>
+                            <select id="chain1-anchor-mode" onchange="syncChain1Planet()" class="w-full bg-white/90 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium text-ink-deep focus:outline-none focus:border-indigo-500">
+                                <option value="almuten">採用上方設定之「最尊貴命主星」</option>
+                                <option value="asc_ruler">採用「上升星座守護星」</option>
+                                <option value="asc_decan">採用「上升點所在旬主星」</option>
+                                <option value="sun">採用「本命太陽 (Sun)」</option>
+                                <option value="moon">採用「本命月亮 (Moon)」</option>
+                                <option value="custom">手動指定本命七政之一</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-500 mb-1">實際啟動追蹤之本命星體</label>
+                            <select id="chain1-start-planet" class="w-full bg-white/90 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-indigo-900 focus:outline-none focus:border-indigo-500">
+                                <!-- JS 填充七政 -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 軸二：流年時主星 -->
+                    <div class="glass-subcard rounded-2xl p-4 border-t-4 border-t-amber-500 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="px-2.5 py-0.5 rounded-lg bg-amber-100 text-amber-900 text-xs font-bold">鎖鏈二 · 流年時主鏈</span>
+                            <span class="text-[11px] text-slate-500 font-medium">追蹤行運盤定位</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">選擇年度／流年時主星 (Chronocrator)</label>
+                            <select id="chain2-start-planet" class="w-full bg-white/90 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-amber-900 focus:outline-none focus:border-amber-500">
+                                <!-- JS 填充七政 -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-500 mb-1">推運時間法源</label>
+                            <select id="chain2-role-label" class="w-full bg-white/90 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium text-ink-deep focus:outline-none focus:border-amber-500">
+                                <option value="年度小限時主星 (Annual Profection)">年度小限時主星 (Annual Profection)</option>
+                                <option value="法達大運主星 (Firdaria Lord)">法達大運主星 (Firdaria Lord)</option>
+                                <option value="法達小運副主 (Firdaria Sub-Lord)">法達小運副主 (Firdaria Sub-Lord)</option>
+                                <option value="黃道釋放主星 (Zodiacal Releasing)">黃道釋放主星 (Zodiacal Releasing)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 軸三：事件用神主星 -->
+                    <div class="glass-subcard rounded-2xl p-4 border-t-4 border-t-emerald-500 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="px-2.5 py-0.5 rounded-lg bg-emerald-100 text-emerald-900 text-xs font-bold">鎖鏈三 · 事件用神鏈</span>
+                            <span class="text-[11px] text-slate-500 font-medium">針對所問事件核心</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">選擇用神主星</label>
+                                <select id="chain3-start-planet" class="w-full bg-white/90 border border-slate-300 rounded-xl px-2.5 py-2 text-xs font-bold text-emerald-900 focus:outline-none focus:border-emerald-500">
+                                    <!-- JS 填充七政 -->
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">追蹤盤面</label>
+                                <select id="chain3-chart-mode" class="w-full bg-white/90 border border-slate-300 rounded-xl px-2.5 py-2 text-xs font-medium text-emerald-800 focus:outline-none focus:border-emerald-500">
+                                    <option value="transit">即時行運盤（動態）</option>
+                                    <option value="natal">本命盤（先天根基）</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-500 mb-1">所問事件用神類別</label>
+                            <select id="chain3-role-label" class="w-full bg-white/90 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium text-ink-deep focus:outline-none focus:border-emerald-500">
+                                <option value="事業官祿用神（十宮主／太陽）">事業官祿用神（十宮主／太陽）</option>
+                                <option value="財富資源用神（二宮主／木星）">財富資源用神（二宮主／木星）</option>
+                                <option value="文書合約用神（三宮主／水星）">文書合約用神（三宮主／水星）</option>
+                                <option value="感情婚姻用神（七宮主／金星）">感情婚姻用神（七宮主／金星）</option>
+                                <option value="健康疾厄用神（六宮主／八宮主）">健康疾厄用神（六宮主／八宮主）</option>
+                                <option value="田宅家運用神（四宮主／月亮）">田宅家運用神（四宮主／月亮）</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 執行推演主按鈕 -->
+                <div class="mt-6 flex justify-center">
+                    <button onclick="runFullChainAnalysis()" class="w-full sm:w-auto px-10 py-3.5 rounded-2xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-white font-serif font-bold text-base tracking-wider shadow-lg shadow-amber-500/20 hover:brightness-105 active:scale-[0.99] transition flex items-center justify-center gap-2">
+                        <span>✦</span> 啟動三軸36旬向後相容定位與吉凶推演 <span>✦</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ==================== 3. 三條定位鎖鏈視覺化流程圖 ==================== -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div id="chain-1-container" class="glass-card rounded-3xl p-5 flex flex-col"></div>
+                <div id="chain-2-container" class="glass-card rounded-3xl p-5 flex flex-col"></div>
+                <div id="chain-3-container" class="glass-card rounded-3xl p-5 flex flex-col"></div>
+            </div>
+
+            <!-- ==================== 4. 三鏈最終定位交會與事件吉凶總評 ==================== -->
+            <div id="synthesis-panel" class="glass-card rounded-3xl p-6 sm:p-8">
+                <!-- JS 動態生成 -->
+            </div>
+
+        </section>
+
+        <!-- ==================== 視圖二：36旬全表速查手冊 ==================== -->
+        <section id="view-handbook" class="hidden space-y-6">
+            <div class="glass-card rounded-3xl p-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-200/80">
+                    <div>
+                        <h2 class="font-serif text-xl font-bold text-ink-deep">36旬（Decans）古典與神秘學全表速查手冊</h2>
+                        <p class="text-xs text-slate-600 mt-1">完整收錄迦勒底序旬主星、阿格里帕《隱秘哲學》第二卷徵象、黃金黎明塔羅小牌與黃道人體對應</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <select id="filter-sign" onchange="renderHandbook()" class="bg-white/90 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium text-ink-deep focus:outline-none focus:border-amber-500">
+                            <option value="ALL">全部十二星座（36旬）</option>
+                        </select>
+                        <select id="filter-ruler" onchange="renderHandbook()" class="bg-white/90 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium text-ink-deep focus:outline-none focus:border-amber-500">
+                            <option value="ALL">全部旬主星（迦勒底序）</option>
+                            <option value="Mars">♂ 火星主旬</option>
+                            <option value="Sun">☉ 太陽主旬</option>
+                            <option value="Venus">♀ 金星主旬</option>
+                            <option value="Mercury">☿ 水星主旬</option>
+                            <option value="Moon">☽ 月亮主旬</option>
+                            <option value="Saturn">♄ 土星主旬</option>
+                            <option value="Jupiter">♃ 木星主旬</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="handbook-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 自訂刪除確認模態框 (取代 confirm) -->
+    <div id="delete-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="glass-card bg-white/95 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-2xl">
+            <h3 class="font-serif text-base font-bold text-ink-deep">確認刪除存檔紀錄？</h3>
+            <p id="delete-modal-text" class="text-xs text-slate-600 leading-relaxed">確定要刪除此筆占星推演存檔嗎？此操作無法復原。</p>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeDeleteModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition">取消</button>
+                <button onclick="confirmDeleteRecord()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-xs font-semibold text-white transition">確認刪除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示訊息框 (取代 alert) -->
+    <div id="toast-box" class="fixed bottom-6 right-6 glass-card bg-white/95 border-amber-400 text-ink-deep font-semibold px-5 py-3 rounded-2xl shadow-xl text-xs transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <span class="text-amber-600 text-base">✦</span>
+        <span id="toast-msg">提示訊息</span>
+    </div>
+
+    <script>
+        // ============================================================================
+        // 1. 基礎占星常數定義
+        // ============================================================================
+        const SIGNS = [
+            { id: 0,  name: "白羊座", symbol: "♈", element: "火", ruler: "Mars" },
+            { id: 1,  name: "金牛座", symbol: "♉", element: "土", ruler: "Venus" },
+            { id: 2,  name: "雙子座", symbol: "♊", element: "風", ruler: "Mercury" },
+            { id: 3,  name: "巨蟹座", symbol: "♋", element: "水", ruler: "Moon" },
+            { id: 4,  name: "獅子座", symbol: "♌", element: "火", ruler: "Sun" },
+            { id: 5,  name: "處女座", symbol: "♍", element: "土", ruler: "Mercury" },
+            { id: 6,  name: "天秤座", symbol: "♎", element: "風", ruler: "Venus" },
+            { id: 7,  name: "天蠍座", symbol: "♏", element: "水", ruler: "Mars" },
+            { id: 8,  name: "射手座", symbol: "♐", element: "火", ruler: "Jupiter" },
+            { id: 9,  name: "摩羯座", symbol: "♑", element: "土", ruler: "Saturn" },
+            { id: 10, name: "水瓶座", symbol: "♒", element: "風", ruler: "Saturn" },
+            { id: 11, name: "雙魚座", symbol: "♓", element: "水", ruler: "Jupiter" }
+        ];
+
+        const PLANET_KEYS = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"];
+
+        const PLANETS = {
+            "Sun":     { key: "Sun",     name: "太陽", symbol: "☉", nature: "發光體（尊貴權威）", polarity: "benefic", score: 1.5,  desc: "核心意志、名聲地位、公開顯化與領導權" },
+            "Moon":    { key: "Moon",    name: "月亮", symbol: "☽", nature: "發光體（變動滋養）", polarity: "neutral", score: 0.5,  desc: "情緒波動、日常起居、大眾反應與物質落實" },
+            "Mercury": { key: "Mercury", name: "水星", symbol: "☿", nature: "中性星（溝通思維）", polarity: "neutral", score: 0.5,  desc: "文書契約、商業交易、訊息傳遞與策略轉折" },
+            "Venus":   { key: "Venus",   name: "金星", symbol: "♀", nature: "小吉星（和諧利益）", polarity: "benefic", score: 2.0,  desc: "和諧順遂、財利資源、情感連結與貴人相助" },
+            "Mars":    { key: "Mars",    name: "火星", symbol: "♂", nature: "小凶星（衝突切割）", polarity: "malefic", score: -1.8, desc: "競爭衝突、急躁消耗、果斷切割與突發變故" },
+            "Jupiter": { key: "Jupiter", name: "木星", symbol: "♃", nature: "大吉星（擴張恩典）", polarity: "benefic", score: 2.5,  desc: "擴張增長、貴人提攜、智慧福報與圓滿成就" },
+            "Saturn":  { key: "Saturn",  name: "土星", symbol: "♄", nature: "大凶星（限制考驗）", polarity: "malefic", score: -2.2, desc: "阻礙延遲、沉重責任、結構重組與業力考驗" }
+        };
+
+        const HOUSES = [
+            { num: 1,  name: "第1宮（命宮）", domain: "自我狀態、身體健康、個人行動、外在形象" },
+            { num: 2,  name: "第2宮（財帛宮）", domain: "正財收入、現金流、動產資源、物質價值" },
+            { num: 3,  name: "第3宮（兄弟宮）", domain: "溝通文書、短期旅行、手足鄰里、日常訊息" },
+            { num: 4,  name: "第4宮（田宅宮）", domain: "家庭根基、房地產、父母長輩、事件最終結局" },
+            { num: 5,  name: "第5宮（子女宮）", domain: "戀愛桃花、子女孕育、創意作品、投機娛樂" },
+            { num: 6,  name: "第6宮（奴僕宮）", domain: "日常勞務、職場下屬、疾病健康隱患、服務責任" },
+            { num: 7,  name: "第7宮（夫妻宮）", domain: "婚姻伴侶、商業合夥、公開對手、法律契約" },
+            { num: 8,  name: "第8宮（疾厄宮）", domain: "偏財遺產、債務稅務、深層危機、心理轉化" },
+            { num: 9,  name: "第9宮（遷移宮）", domain: "高等教育、長途遠行、海外事務、法律判決" },
+            { num: 10, name: "第10宮（官祿宮）", domain: "事業成就、社會地位、名聲權威、上司長官" },
+            { num: 11, name: "第11宮（福德宮）", domain: "人脈社群、貴人助力、理想願景、事業紅利" },
+            { num: 12, name: "第12宮（玄秘宮）", domain: "隱密小人、幕後運作、精神修行、消耗隔離" }
+        ];
+
+        // ============================================================================
+        // 2. 完整 36 旬資料庫（迦勒底序：白羊一旬火星起至雙魚三旬火星止）
+        // ============================================================================
+        const DECANS_DB = [
+            // 白羊座
+            { id: 1, signId: 0, decanNum: 1, range: "0°-9°59'", ruler: "Mars", meaning: "純粹的開創衝動與無畏勇氣，具備破局爆發力，但易因急躁引發正面衝突。", agrippa: "《隱秘哲學》：身披黑衣、腰繫白帶的魁梧武士，手持利刃與盾牌。主掌勇氣、無畏、果斷與爭鬥之力。", tarot: "權杖二（Two of Wands）— 統御", tarotKeywords: "開創野心、掌握主導權、大膽規劃", bodyPart: "頭蓋骨頂部、大腦皮質與額頭" },
+            { id: 2, signId: 0, decanNum: 2, range: "10°-19°59'", ruler: "Sun", meaning: "個人意志與榮耀的展現，具備領導魅力與熱情，渴望認可，需防自我中心。", agrippa: "《隱秘哲學》：身著紅袍、頭戴金冠的尊貴婦人，儀態威嚴。主掌高貴氣度、權威地位與崇高聲望。", tarot: "權杖三（Three of Wands）— 美德", tarotKeywords: "遠見卓識、事業拓展、初步成功", bodyPart: "雙眼、視覺神經與鼻樑" },
+            { id: 3, signId: 0, decanNum: 3, range: "20°-29°59'", ruler: "Venus", meaning: "熱情與美感、渴望的結合，行動帶有強烈情感驅力，易在愛恨與享樂中燃燒。", agrippa: "《隱秘哲學》：面容白皙、身穿紅衣的俊美青年，手腕戴金鐲。主掌熱烈情感、藝術創造與社交魅力。", tarot: "權杖四（Four of Wands）— 完美", tarotKeywords: "階段圓滿、慶祝豐收、和諧穩固", bodyPart: "下顎、牙齒與口腔兩側肌肉" },
+            // 金牛座
+            { id: 4, signId: 1, decanNum: 1, range: "0°-9°59'", ruler: "Mercury", meaning: "務實的規劃與物質計算能力，善於將想法轉化為具體利益，重視細節與執行。", agrippa: "《隱秘哲學》：身著樸素長袍的農夫或工匠，手持耕作與測量器具。主掌辛勤耕耘、商業精算與土地財富。", tarot: "錢幣五（Five of Pentacles）— 物質憂慮", tarotKeywords: "資源緊縮、現實考驗、過度擔憂匱乏", bodyPart: "頸部上端、咽喉與聲帶" },
+            { id: 5, signId: 1, decanNum: 2, range: "10°-19°59'", ruler: "Moon", meaning: "對安全感、滋養與物質豐盛的深切渴望，感官敏銳且護衛心強，易陷入固執。", agrippa: "《隱秘哲學》：體態豐腴、面容和藹的婦人，手持鑰匙與權杖。主掌家宅豐饒、物質積累與生活安穩。", tarot: "錢幣六（Six of Pentacles）— 物質成功", tarotKeywords: "資源分配、慷慨施與、收支平衡", bodyPart: "甲狀腺、氣管與扁桃腺" },
+            { id: 6, signId: 1, decanNum: 3, range: "20°-29°59'", ruler: "Saturn", meaning: "極致的耐力、堅韌與長期主義，能承受巨大壓力建立不可動搖的基礎，過程緩慢。", agrippa: "《隱秘哲學》：面容嚴肅的老者，身穿粗麻布衣，手持鋤頭與鎖鏈。主掌堅忍不拔、土地契約與持久結構。", tarot: "錢幣七（Seven of Pentacles）— 未竟的成功", tarotKeywords: "耐心等待、評估回報、耕耘期瓶頸", bodyPart: "後頸椎、斜方肌上緣與鎖骨連接處" },
+            // 雙子座
+            { id: 7, signId: 2, decanNum: 1, range: "0°-9°59'", ruler: "Jupiter", meaning: "思維開闊、善於溝通與跨界整合，具備敏銳洞察力與說服力，透過知識開創機會。", agrippa: "《隱秘哲學》：衣著華美、手持書卷與權杖的學者。主掌雄辯之才、法律知識、智慧傳播與貴人賞識。", tarot: "寶劍八（Eight of Swords）— 力量受阻", tarotKeywords: "思慮過多、自我設限、資訊干擾", bodyPart: "雙肩、鎖骨與上臂神經叢" },
+            { id: 8, signId: 2, decanNum: 2, range: "10°-19°59'", ruler: "Mars", meaning: "言語犀利、反應極快且充滿辯論競爭精神，行動力強但易因言詞衝突招惹是非。", agrippa: "《隱秘哲學》：手持弓箭與長笛的敏捷男子，目光銳利。主掌機智應變、言語交鋒與快速突破阻礙。", tarot: "寶劍九（Nine of Swords）— 絕望與殘酷", tarotKeywords: "精神焦慮、失眠多夢、心理內耗", bodyPart: "肺部上葉、支氣管與前臂" },
+            { id: 9, signId: 2, decanNum: 3, range: "20°-29°59'", ruler: "Sun", meaning: "具備將複雜資訊轉化為清晰表達的才華，熱愛演說與社交舞台，以思想照亮他人。", agrippa: "《隱秘哲學》：頭戴桂冠、身穿亮麗長袍的使者，手持信箋。主掌名聲傳播、文藝才華與公開榮譽。", tarot: "寶劍十（Ten of Swords）— 毀滅", tarotKeywords: "思維徹底終結、舊觀念瓦解、置之死地而後生", bodyPart: "雙手、手腕與呼吸系統末梢" },
+            // 巨蟹座
+            { id: 10, signId: 3, decanNum: 1, range: "0°-9°59'", ruler: "Venus", meaning: "細膩溫柔的情感連結與審美直覺，重視家庭和諧與親密關係，善於以柔克剛。", agrippa: "《隱秘哲學》：面容清秀、身披輕紗的少女，手持鮮花與銀杯。主掌深情厚誼、家庭溫馨與優雅魅力。", tarot: "聖杯二（Two of Cups）— 愛", tarotKeywords: "心靈契合、情感交流、合作結盟", bodyPart: "胸廓上部、乳房與乳腺組織" },
+            { id: 11, signId: 3, decanNum: 2, range: "10°-19°59'", ruler: "Mercury", meaning: "情緒與理智交織，具備極強記憶力、直覺洞察與心理敏銳度，善於經營社群資源。", agrippa: "《隱秘哲學》：手持天平與帳冊的女子，神情專注。主掌家業管理、商業直覺與精細籌劃。", tarot: "聖杯三（Three of Cups）— 豐盛", tarotKeywords: "社群歡慶、情感豐收、好友相聚", bodyPart: "胃部、橫膈膜與食道下端" },
+            { id: 12, signId: 3, decanNum: 3, range: "20°-29°59'", ruler: "Moon", meaning: "情感深度達到頂峰，擁有強大保護本能與直覺預感，但也極易受環境情緒影響。", agrippa: "《隱秘哲學》：身著白袍、頭戴新月冠冕的婦人，足踏波濤。主掌潮汐變動、直覺預知與母性庇護。", tarot: "聖杯四（Four of Cups）— 奢華疲乏", tarotKeywords: "情緒冷感、對現狀不滿、忽略眼前新機會", bodyPart: "肝膽邊緣、胃壁黏膜與體液循環" },
+            // 獅子座
+            { id: 13, signId: 4, decanNum: 1, range: "0°-9°59'", ruler: "Saturn", meaning: "嚴肅而深沉的王者氣度，肩負重任與原則，不輕易妥協，能建立長久的權威。", agrippa: "《隱秘哲學》：身披黑毛皮斗篷、端坐寶座的威嚴君王。主掌統治權柄、威嚴莊重與持久榮耀。", tarot: "權杖五（Five of Wands）— 紛爭", tarotKeywords: "意見分歧、良性競爭、多方角力", bodyPart: "心臟主動脈、上背部胸椎" },
+            { id: 14, signId: 4, decanNum: 2, range: "10°-19°59'", ruler: "Jupiter", meaning: "慷慨宏大、充滿自信與遠大抱負，具備極佳貴人運與領袖風範，帶動團隊繁榮。", agrippa: "《隱秘哲學》：頭戴金冠、身穿紫金華服的勝利者，手持寶劍。主掌凱旋榮耀、高貴慷慨與事業擴張。", tarot: "權杖六（Six of Wands）— 勝利", tarotKeywords: "凱旋歸來、公開表揚、實至名歸", bodyPart: "心室、心肌與血液循環核心" },
+            { id: 15, signId: 4, decanNum: 3, range: "20°-29°59'", ruler: "Mars", meaning: "熾熱無畏的戰鬥意志與表現力，為捍衛尊嚴與信念不惜代價，需防過度好勝。", agrippa: "《隱秘哲學》：身披鎧甲、手持火炬與利劍的紅衣戰士。主掌無畏征戰、熱情爆發與克服強敵。", tarot: "權杖七（Seven of Wands）— 勇氣", tarotKeywords: "居高臨下防守、孤軍奮戰、堅守立場", bodyPart: "側腹部肋骨、背闊肌與心血管" },
+            // 處女座
+            { id: 16, signId: 5, decanNum: 1, range: "0°-9°59'", ruler: "Sun", meaning: "追求完美與精準的專業精神，能將瑣碎事務組織得井井有條，憑專業贏得尊重。", agrippa: "《隱秘哲學》：身穿素雅長裙的少女，手持麥穗與燈盞。主掌豐收秩序、精準分析與專業技藝。", tarot: "錢幣八（Eight of Pentacles）— 審慎勤勉", tarotKeywords: "專注打磨技藝、精益求精、踏實工作", bodyPart: "十二指腸、小腸上段與消化酵素" },
+            { id: 17, signId: 5, decanNum: 2, range: "10°-19°59'", ruler: "Venus", meaning: "將實用技術與美學品味結合，注重生活品質、財務規劃與服務細節，務實優雅。", agrippa: "《隱秘哲學》：面容端莊的女子，手持天平與錢袋。主掌財務穩健、工藝美學與和諧服務。", tarot: "錢幣九（Nine of Pentacles）— 物質獲得", tarotKeywords: "獨立自主、優雅豐盛、享受生活品質", bodyPart: "小腸中下段、腸系膜與營養吸收" },
+            { id: 18, signId: 5, decanNum: 3, range: "20°-29°59'", ruler: "Mercury", meaning: "極致的邏輯分析、批判思維與資訊整理能力，洞察系統漏洞，易陷入過度挑剔。", agrippa: "《隱秘哲學》：手持書卷與醫藥器具的長者，目光專注。主掌醫學知識、精密計算與洞察秋毫之智。", tarot: "錢幣十（Ten of Pentacles）— 財富", tarotKeywords: "家族傳承、基業長青、物質圓滿", bodyPart: "大腸、盲腸與腹部神經叢" },
+            // 天秤座
+            { id: 19, signId: 6, decanNum: 1, range: "0°-9°59'", ruler: "Moon", meaning: "敏銳捕捉人際氛圍與公平需求，善於協調矛盾，但內心容易因在意他人而搖擺。", agrippa: "《隱秘哲學》：手持公正天平與明鏡的女子，神情溫和。主掌公平裁決、外交手腕與和諧平衡。", tarot: "寶劍二（Two of Swords）— 和平", tarotKeywords: "暫時休戰、內心權衡、僵局中的平靜", bodyPart: "腎臟皮質、腰部兩側肌群" },
+            { id: 20, signId: 6, decanNum: 2, range: "10°-19°59'", ruler: "Saturn", meaning: "重視契約精神、社會規範與責任義務，在合作關係中講求原則與長遠承諾。", agrippa: "《隱秘哲學》：身穿法官長袍、手持法典與權杖的威嚴男子。主掌法律秩序、契約約束與社會公義。", tarot: "寶劍三（Three of Swords）— 悲傷", tarotKeywords: "理智看清真相、關係裂痕、心痛割捨", bodyPart: "腎上腺、腰椎與酸鹼平衡系統" },
+            { id: 21, signId: 6, decanNum: 3, range: "20°-29°59'", ruler: "Jupiter", meaning: "具備宏觀社交視野與公正智慧，透過合作與談判創造雙贏局面，享有良好聲譽。", agrippa: "《隱秘哲學》：頭戴花冠、手持金色天平的貴族，儀態優雅。主掌高尚盟約、貴人合作與和諧繁榮。", tarot: "寶劍四（Four of Swords）— 休戰", tarotKeywords: "退隱休養、沉澱思緒、戰後恢復蓄力", bodyPart: "輸尿管、下腰部與盆腔上緣" },
+            // 天蠍座
+            { id: 22, signId: 7, decanNum: 1, range: "0°-9°59'", ruler: "Mars", meaning: "深沉而銳利的洞察力與意志力，敢於直面危機與陰暗面，愛恨分明，韌性極強。", agrippa: "《隱秘哲學》：面色冷峻、手持利刃與盾牌的戰士。主掌隱密行動、無畏危機與徹底轉化。", tarot: "聖杯五（Five of Cups）— 失落", tarotKeywords: "沉浸於失去的痛苦、情感遺憾、忽略尚存希望", bodyPart: "外生殖系統、腹股溝與骨盆底肌" },
+            { id: 23, signId: 7, decanNum: 2, range: "10°-19°59'", ruler: "Sun", meaning: "在深層危機中展現強大掌控力與再生能量，不畏懼權力博弈，從逆境奪回主導權。", agrippa: "《隱秘哲學》：騎乘駿馬、手持權杖的威嚴男子。主掌隱密權柄、克服險阻與浴火重生。", tarot: "聖杯六（Six of Cups）— 愉悅", tarotKeywords: "純真回憶、過往情誼重現、心靈慰藉", bodyPart: "膀胱、前列腺／子宮頸與排泄括約肌" },
+            { id: 24, signId: 7, decanNum: 3, range: "20°-29°59'", ruler: "Venus", meaning: "極致的情感深度、神秘魅力與靈魂羈絆，渴望徹底融合與轉化，易陷入執念。", agrippa: "《隱秘哲學》：披著神秘面紗、手持金杯與蛇杖的婦人。主掌深層魅力、神秘智慧與靈魂吸引力。", tarot: "聖杯七（Seven of Cups）— 幻象與放縱", tarotKeywords: "慾望投射、選擇過多迷失、需辨別真偽", bodyPart: "直腸、乙狀結腸與生殖腺體" },
+            // 射手座
+            { id: 25, signId: 8, decanNum: 1, range: "0°-9°59'", ruler: "Mercury", meaning: "對真理、哲學與遠方充滿好奇，思維敏捷，善於將宏大理念轉化為生動語言。", agrippa: "《隱秘哲學》：手持弓箭與書卷的旅人，目光望向遠方。主掌遠行探索、知識傳播與追求真理。", tarot: "權杖八（Eight of Wands）— 迅速", tarotKeywords: "訊息快速傳遞、行動加速、旅程展開", bodyPart: "髖關節、骨盆外側與臀大肌" },
+            { id: 26, signId: 8, decanNum: 2, range: "10°-19°59'", ruler: "Moon", meaning: "內心渴望自由流浪與精神探索，直覺力強，能適應不同文化，易在理想與現實漂泊。", agrippa: "《隱秘哲學》：身著旅人斗篷、手持明燈與弓箭的女子。主掌靈感啟發、異鄉機遇與自由意志。", tarot: "權杖九（Nine of Wands）— 力量", tarotKeywords: "歷經考驗後的堅韌、高度戒備、不屈意志", bodyPart: "大腿前側股四頭肌與股骨" },
+            { id: 27, signId: 8, decanNum: 3, range: "20°-29°59'", ruler: "Saturn", meaning: "將崇高理想落實為嚴謹的信仰體系或法律準則，具備道德堅持與深沉智慧。", agrippa: "《隱秘哲學》：頭戴高冠、手持法典與權杖的長者。主掌宗教律法、哲學權威與道德堅守。", tarot: "權杖十（Ten of Wands）— 壓迫", tarotKeywords: "責任過重、獨自承擔重擔、需學會放下", bodyPart: "坐骨神經、大腿後側肌群與肝臟代謝" },
+            // 摩羯座
+            { id: 28, signId: 9, decanNum: 1, range: "0°-9°59'", ruler: "Jupiter", meaning: "具備建立宏大事業與社會秩序的野心，務實且有遠見，善於整合資源攀登高峰。", agrippa: "《隱秘哲學》：手持權杖與建築藍圖的長官。主掌事業宏圖、組織領導與穩健擴張。", tarot: "錢幣二（Two of Pentacles）— 和諧變化", tarotKeywords: "靈活調度資源、多重任務平衡、務實應變", bodyPart: "膝蓋關節、髕骨與半月板" },
+            { id: 29, signId: 9, decanNum: 2, range: "10°-19°59'", ruler: "Mars", meaning: "鋼鐵般的自律與執行力，為達成目標不畏艱難險阻，作風強硬果斷，需防勞損。", agrippa: "《隱秘哲學》：身披重甲、攀登險峰的戰士，手持利斧。主掌攻堅克難、無堅不摧的意志與戰果。", tarot: "錢幣三（Three of Pentacles）— 物質工作", tarotKeywords: "團隊協作、專業認可、按部就班建構成果", bodyPart: "膝蓋韌帶、小腿上端脛骨" },
+            { id: 30, signId: 9, decanNum: 3, range: "20°-29°59'", ruler: "Sun", meaning: "經過長期歷練後獲得的實質權威與榮耀，具備統御全局的格局與威望，名實相符。", agrippa: "《隱秘哲學》：端坐高台、手持金印與卷軸的尊貴統治者。主掌最高榮譽、權威認可與基業穩固。", tarot: "錢幣四（Four of Pentacles）— 世俗權力", tarotKeywords: "牢牢掌控資源、保守防禦、追求絕對安全感", bodyPart: "全身骨骼系統、牙齒琺瑯質與皮膚表層" },
+            // 水瓶座
+            { id: 31, signId: 10, decanNum: 1, range: "0°-9°59'", ruler: "Venus", meaning: "追求精神自由與平等博愛，具備獨特審美與前衛社交魅力，吸引志同道合夥伴。", agrippa: "《隱秘哲學》：手持銀瓶傾倒清泉的優雅女子。主掌友誼結盟、社群和諧與革新思潮。", tarot: "寶劍五（Five of Swords）— 挫敗", tarotKeywords: "觀念衝突、兩敗俱傷的爭執、重新評估立場", bodyPart: "小腿腓骨、小腿肚肌肉" },
+            { id: 32, signId: 10, decanNum: 2, range: "10°-19°59'", ruler: "Mercury", meaning: "天才般的客觀理性、科學思維與未來洞察力，透過創新理念與資訊網絡打破框架。", agrippa: "《隱秘哲學》：仰望星辰、手持星盤與書卷的哲人。主掌天文科學、革新發明與超越時代的智慧。", tarot: "寶劍六（Six of Swords）— 科學與渡過", tarotKeywords: "理智抽離混亂、平靜過渡期、客觀分析出路", bodyPart: "腳踝關節、阿基里斯腱" },
+            { id: 33, signId: 10, decanNum: 3, range: "20°-29°59'", ruler: "Moon", meaning: "對集體意識與時代脈動極為敏銳，渴望獨立自主，對人類整體命運懷有深切共情。", agrippa: "《隱秘哲學》：身披星辰斗篷、手持明鏡的神秘旅人。主掌時代變革、群眾趨勢與精神獨立。", tarot: "寶劍七（Seven of Swords）— 徒勞與智取", tarotKeywords: "巧妙迴避正面衝突、策略性行動、謹防暗算", bodyPart: "下肢靜脈循環、神經傳導末梢" },
+            // 雙魚座
+            { id: 34, signId: 11, decanNum: 1, range: "0°-9°59'", ruler: "Saturn", meaning: "深沉的慈悲、宿命感與自我奉獻，能在寂靜與限制中領悟靈性真理，易背負重擔。", agrippa: "《隱秘哲學》：身穿深色長袍、手持念珠與魚符的隱士。主掌靜修冥想、業力淨化與靈性承擔。", tarot: "聖杯八（Eight of Cups）— 捨棄成功", tarotKeywords: "主動離開舒適圈、追尋更高精神意義、踏上旅程", bodyPart: "足跟、腳踝內側與淋巴循環" },
+            { id: 35, signId: 11, decanNum: 2, range: "10°-19°59'", ruler: "Jupiter", meaning: "無邊的慈悲心、藝術靈感與信仰恩典，具備強大包容力與福報，能化解厄運。", agrippa: "《隱秘哲學》：頭戴光環、手持金杯與橄欖枝的祭司。主掌神聖恩典、靈性祝福與廣大慈悲。", tarot: "聖杯九（Nine of Cups）— 物質與情感幸福", tarotKeywords: "心想事成、內在滿足、感官與心靈雙重愉悅", bodyPart: "足弓、腳掌心與足底神經反射區" },
+            { id: 36, signId: 11, decanNum: 3, range: "20°-29°59'", ruler: "Mars", meaning: "黃道終點的靈魂覺醒與破繭衝動，為信仰或夢想燃燒能量，蘊含重生的爆發力。", agrippa: "《隱秘哲學》：手持三叉戟與火炬、立於海浪之上的戰士。主掌靈魂救贖、打破幻象與終極蛻變。", tarot: "聖杯十（Ten of Cups）— 永久成功", tarotKeywords: "情感圓滿歸宿、家庭和樂、終極和諧", bodyPart: "十根腳趾、足部微血管與免疫體液系統" }
+        ];
+
+        // ============================================================================
+        // 3. 精確度分計算與交界臨界判斷 (Decimal Degree & Cuspal Alert)
+        // ============================================================================
+        function clampInt(val, min, max, fallback = 0) {
+            const parsed = parseInt(val, 10);
+            if (isNaN(parsed)) return fallback;
+            return Math.max(min, Math.min(max, parsed));
+        }
+
+        function formatDegMin(deg, min) {
+            const d = clampInt(deg, 0, 29, 0);
+            const m = clampInt(min, 0, 59, 0);
+            return `${d}°${String(m).padStart(2, '0')}'`;
+        }
+
+        /**
+         * 根據星座ID、度數(0-29)、角分(0-59)精確計算所屬36旬與是否處於交界臨界 (30角分內)
+         */
+        function getPreciseDecanInfo(signId, deg, min) {
+            const d = clampInt(deg, 0, 29, 0);
+            const m = clampInt(min, 0, 59, 0);
+            const decimalDeg = d + (m / 60.0);
+
+            let decanNum = 1;
+            if (decimalDeg >= 20.0) {
+                decanNum = 3;
+            } else if (decimalDeg >= 10.0) {
+                decanNum = 2;
+            } else {
+                decanNum = 1;
+            }
+
+            // 檢查距離 10.0° 或 20.0° 交界處是否在 0.5° (30角分) 以內
+            let isCuspal = false;
+            let cuspNote = "";
+            const dist10 = Math.abs(decimalDeg - 10.0);
+            const dist20 = Math.abs(decimalDeg - 20.0);
+
+            if (dist10 <= 0.5) {
+                isCuspal = true;
+                const arcMins = Math.round(dist10 * 60);
+                cuspNote = decimalDeg < 10.0
+                    ? `距第二旬交界僅 ${arcMins}'（臨界過渡）`
+                    : `剛入第二旬僅 ${arcMins}'（交界初入）`;
+            } else if (dist20 <= 0.5) {
+                isCuspal = true;
+                const arcMins = Math.round(dist20 * 60);
+                cuspNote = decimalDeg < 20.0
+                    ? `距第三旬交界僅 ${arcMins}'（臨界過渡）`
+                    : `剛入第三旬僅 ${arcMins}'（交界初入）`;
+            }
+
+            const decanObj = DECANS_DB.find(item => item.signId === signId && item.decanNum === decanNum);
+            return {
+                decan: decanObj,
+                decimalDeg,
+                isCuspal,
+                cuspNote
+            };
+        }
+
+        // ============================================================================
+        // 4. 初始化介面元素
+        // ============================================================================
+        function initUI() {
+            const natalTbody = document.getElementById('natal-planets-tbody');
+            const transitTbody = document.getElementById('transit-planets-tbody');
+
+            PLANET_KEYS.forEach(pKey => {
+                const p = PLANETS[pKey];
+                natalTbody.insertAdjacentHTML('beforeend', buildPlanetRowHTML('natal', p));
+                transitTbody.insertAdjacentHTML('beforeend', buildPlanetRowHTML('transit', p));
+            });
+
+            // 填充上升點星座
+            const ascSignSel = document.getElementById('natal-asc-sign');
+            SIGNS.forEach(s => ascSignSel.add(new Option(`${s.symbol} ${s.name}`, s.id)));
+
+            // 填充三軸起點星體與 Almuten 選單
+            ['natal-almuten-planet', 'chain1-start-planet', 'chain2-start-planet', 'chain3-start-planet'].forEach(selId => {
+                const sel = document.getElementById(selId);
+                PLANET_KEYS.forEach(pKey => {
+                    const p = PLANETS[pKey];
+                    sel.add(new Option(`${p.symbol} ${p.name}`, pKey));
+                });
+            });
+
+            // 填充手冊星座篩選
+            const filterSign = document.getElementById('filter-sign');
+            SIGNS.forEach(s => filterSign.add(new Option(`${s.symbol} ${s.name}`, s.id)));
+
+            refreshSavedRecordsDropdown();
+            loadPreset('career', false);
+            renderHandbook();
+        }
+
+        function buildPlanetRowHTML(prefix, p) {
+            const signOptions = SIGNS.map(s => `<option value="${s.id}">${s.symbol}${s.name}</option>`).join('');
+            const houseOptions = HOUSES.map(h => `<option value="${h.num}">${h.num}宮</option>`).join('');
+            return `
+                <tr class="hover:bg-white/60 transition">
+                    <td class="py-1.5 px-2 font-bold text-ink-deep whitespace-nowrap">
+                        <span class="text-amber-600 mr-1">${p.symbol}</span>${p.name}
+                    </td>
+                    <td class="py-1.5 px-1">
+                        <select id="${prefix}-${p.key}-sign" onchange="updateRowDecanPreview('${prefix}', '${p.key}')" class="bg-white/90 border border-slate-300 rounded-lg px-1.5 py-1 text-xs font-medium text-ink-deep focus:outline-none focus:border-amber-500">
+                            ${signOptions}
+                        </select>
+                    </td>
+                    <td class="py-1.5 px-1 whitespace-nowrap">
+                        <div class="inline-flex items-center gap-0.5">
+                            <input type="number" id="${prefix}-${p.key}-deg" min="0" max="29" value="10" onchange="updateRowDecanPreview('${prefix}', '${p.key}')" class="w-11 bg-white/90 border border-slate-300 rounded-lg px-1 py-1 text-xs font-bold text-ink-deep text-center focus:outline-none focus:border-amber-500" title="度數 (0-29)">
+                            <span class="text-slate-400 font-bold">°</span>
+                            <input type="number" id="${prefix}-${p.key}-min" min="0" max="59" value="0" onchange="updateRowDecanPreview('${prefix}', '${p.key}')" class="w-11 bg-white/90 border border-slate-300 rounded-lg px-1 py-1 text-xs font-bold text-ink-deep text-center focus:outline-none focus:border-amber-500" title="角分 (0-59)">
+                            <span class="text-slate-400 font-bold">'</span>
+                        </div>
+                    </td>
+                    <td class="py-1.5 px-1">
+                        <select id="${prefix}-${p.key}-house" class="bg-white/90 border border-slate-300 rounded-lg px-1.5 py-1 text-xs font-medium text-indigo-900 focus:outline-none focus:border-amber-500">
+                            ${houseOptions}
+                        </select>
+                    </td>
+                    <td class="py-1.5 px-2 text-right whitespace-nowrap">
+                        <span id="${prefix}-${p.key}-preview" class="text-[11px] font-bold"></span>
+                    </td>
+                </tr>
+            `;
+        }
+
+        function updateRowDecanPreview(prefix, pKey) {
+            const signId = parseInt(document.getElementById(`${prefix}-${pKey}-sign`).value, 10);
+            const degEl = document.getElementById(`${prefix}-${pKey}-deg`);
+            const minEl = document.getElementById(`${prefix}-${pKey}-min`);
+
+            const deg = clampInt(degEl.value, 0, 29, 0);
+            const min = clampInt(minEl.value, 0, 59, 0);
+            degEl.value = deg;
+            minEl.value = min;
+
+            const info = getPreciseDecanInfo(signId, deg, min);
+            const ruler = PLANETS[info.decan.ruler];
+            const isOwn = (info.decan.ruler === pKey);
+
+            let badge = isOwn
+                ? `<span class="text-emerald-700 bg-emerald-100/80 px-1.5 py-0.5 rounded">★入自旬(${ruler.symbol}${ruler.name})</span>`
+                : `<span class="text-amber-800">→ ${ruler.symbol}${ruler.name}旬</span>`;
+
+            if (info.isCuspal) {
+                badge += ` <span class="text-rose-600 font-extrabold" title="${info.cuspNote}">⚠臨界</span>`;
+            }
+
+            document.getElementById(`${prefix}-${pKey}-preview`).innerHTML = badge;
+            if (prefix === 'natal') syncChain1Planet();
+        }
+
+        function updateAscPreview() {
+            const signId = parseInt(document.getElementById('natal-asc-sign').value, 10);
+            const degEl = document.getElementById('natal-asc-deg');
+            const minEl = document.getElementById('natal-asc-min');
+            const deg = clampInt(degEl.value, 0, 29, 0);
+            const min = clampInt(minEl.value, 0, 59, 0);
+            degEl.value = deg;
+            minEl.value = min;
+
+            const signObj = SIGNS[signId];
+            const info = getPreciseDecanInfo(signId, deg, min);
+            const ascLord = PLANETS[signObj.ruler];
+            const decanLord = PLANETS[info.decan.ruler];
+
+            document.getElementById('natal-asc-preview').innerHTML =
+                `守護主：${ascLord.symbol}${ascLord.name} ｜ 第${info.decan.decanNum}旬主：${decanLord.symbol}${decanLord.name}` +
+                (info.isCuspal ? ` <span class="text-rose-600 font-bold">(${info.cuspNote})</span>` : '');
+
+            syncChain1Planet();
+        }
+
+        function syncChain1Planet() {
+            const mode = document.getElementById('chain1-anchor-mode').value;
+            const targetSel = document.getElementById('chain1-start-planet');
+            if (mode === 'custom') {
+                targetSel.disabled = false;
+                return;
+            }
+            targetSel.disabled = true;
+
+            if (mode === 'almuten') {
+                targetSel.value = document.getElementById('natal-almuten-planet').value;
+            } else if (mode === 'asc_ruler') {
+                const signId = parseInt(document.getElementById('natal-asc-sign').value, 10);
+                targetSel.value = SIGNS[signId].ruler;
+            } else if (mode === 'asc_decan') {
+                const signId = parseInt(document.getElementById('natal-asc-sign').value, 10);
+                const deg = clampInt(document.getElementById('natal-asc-deg').value, 0, 29, 0);
+                const min = clampInt(document.getElementById('natal-asc-min').value, 0, 59, 0);
+                targetSel.value = getPreciseDecanInfo(signId, deg, min).decan.ruler;
+            } else if (mode === 'sun') {
+                targetSel.value = 'Sun';
+            } else if (mode === 'moon') {
+                targetSel.value = 'Moon';
+            }
+        }
+
+        function updateAllPreviews() {
+            PLANET_KEYS.forEach(pKey => {
+                updateRowDecanPreview('natal', pKey);
+                updateRowDecanPreview('transit', pKey);
+            });
+            updateAscPreview();
+        }
+
+        function toggleChartPanel() {
+            const wrapper = document.getElementById('chart-tables-wrapper');
+            const btn = document.getElementById('toggle-chart-btn');
+            if (wrapper.classList.contains('hidden')) {
+                wrapper.classList.remove('hidden');
+                btn.textContent = "收合七政輸入表 ▲";
+            } else {
+                wrapper.classList.add('hidden');
+                btn.textContent = "展開七政輸入表 ▼";
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-box');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 2800);
+        }
+
+        function switchTab(tabName) {
+            const viewAnalyzer = document.getElementById('view-analyzer');
+            const viewHandbook = document.getElementById('view-handbook');
+            const btnAnalyzer = document.getElementById('tab-analyzer');
+            const btnHandbook = document.getElementById('tab-handbook');
+
+            if (tabName === 'analyzer') {
+                viewAnalyzer.classList.remove('hidden');
+                viewHandbook.classList.add('hidden');
+                btnAnalyzer.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-600 text-white shadow-sm";
+                btnHandbook.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-ink-deep transition-all";
+            } else {
+                viewAnalyzer.classList.add('hidden');
+                viewHandbook.classList.remove('hidden');
+                btnHandbook.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-600 text-white shadow-sm";
+                btnAnalyzer.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-ink-deep transition-all";
+            }
+        }
+
+        // ============================================================================
+        // 5. 預設範例資料與狀態讀寫
+        // ============================================================================
+        function loadPreset(type, notify = true) {
+            if (type === 'career') {
+                // 範例一：事業升遷（三鏈最終匯聚於木星／太陽吉星體系）
+                const natalData = {
+                    Sun:     { sign: 4, deg: 14, min: 25, house: 10 }, // 獅子 14°25' (2旬木星) -> 10宮
+                    Moon:    { sign: 3, deg: 5,  min: 18, house: 9  }, // 巨蟹 05°18' (1旬金星) -> 9宮
+                    Mercury: { sign: 5, deg: 22, min: 40, house: 11 }, // 處女 22°40' (3旬水星-入自旬) -> 11宮
+                    Venus:   { sign: 6, deg: 25, min: 10, house: 12 }, // 天秤 25°10' (3旬木星) -> 12宮
+                    Mars:    { sign: 0, deg: 12, min: 5,  house: 6  }, // 白羊 12°05' (2旬太陽) -> 6宮
+                    Jupiter: { sign: 11,deg: 15, min: 32, house: 5  }, // 雙魚 15°32' (2旬木星-入自旬!) -> 5宮
+                    Saturn:  { sign: 9, deg: 4,  min: 48, house: 3  }  // 摩羯 04°48' (1旬木星) -> 3宮
+                };
+                const transitData = {
+                    Sun:     { sign: 8, deg: 22, min: 15, house: 2  }, // 射手 22°15' (3旬土星) -> 2宮
+                    Moon:    { sign: 1, deg: 14, min: 50, house: 7  }, // 金牛 14°50' (2旬月亮-入自旬) -> 7宮
+                    Mercury: { sign: 9, deg: 2,  min: 12, house: 3  }, // 摩羯 02°12' (1旬木星) -> 3宮
+                    Venus:   { sign: 10,deg: 4,  min: 35, house: 4  }, // 水瓶 04°35' (1旬金星-入自旬) -> 4宮
+                    Mars:    { sign: 4, deg: 16, min: 8,  house: 10 }, // 獅子 16°08' (2旬木星) -> 10宮
+                    Jupiter: { sign: 8, deg: 6,  min: 42, house: 2  }, // 射手 06°42' (1旬水星) -> 2宮
+                    Saturn:  { sign: 11,deg: 18, min: 19, house: 5  }  // 雙魚 18°19' (2旬木星) -> 5宮
+                };
+                applyChartData(natalData, transitData);
+                document.getElementById('natal-asc-sign').value = 4; // 獅子上升
+                document.getElementById('natal-asc-deg').value = 11;
+                document.getElementById('natal-asc-min').value = 20;
+                document.getElementById('natal-almuten-planet').value = 'Sun';
+
+                document.getElementById('chain1-anchor-mode').value = 'almuten';
+                document.getElementById('chain2-start-planet').value = 'Mars';
+                document.getElementById('chain2-role-label').value = '年度小限時主星 (Annual Profection)';
+                document.getElementById('chain3-start-planet').value = 'Jupiter';
+                document.getElementById('chain3-chart-mode').value = 'transit';
+                document.getElementById('chain3-role-label').value = '事業官祿用神（十宮主／太陽）';
+                document.getElementById('record-title-input').value = '範例一：事業升遷三鏈推演';
+                if (notify) showToast("已載入「範例一：事業升遷」精密座標並計算三軸鎖鏈");
+            } else if (type === 'cusp_finance') {
+                // 範例二：合約財運與交界臨界測試（含 9°52' 與 19°48' 交界臨界案例）
+                const natalData = {
+                    Sun:     { sign: 7, deg: 9,  min: 52, house: 8  }, // 天蠍 09°52' (距10°二旬交界僅8'！仍屬1旬火星) -> 8宮
+                    Moon:    { sign: 6, deg: 15, min: 14, house: 7  }, // 天秤 15°14' (2旬土星) -> 7宮
+                    Mercury: { sign: 7, deg: 19, min: 48, house: 8  }, // 天蠍 19°48' (距20°三旬交界僅12'！仍屬2旬太陽) -> 8宮
+                    Venus:   { sign: 1, deg: 6,  min: 20, house: 2  }, // 金牛 06°20' (1旬水星) -> 2宮
+                    Mars:    { sign: 9, deg: 15, min: 10, house: 10 }, // 摩羯 15°10' (2旬火星-入自旬) -> 10宮
+                    Jupiter: { sign: 2, deg: 12, min: 35, house: 3  }, // 雙子 12°35' (2旬火星) -> 3宮
+                    Saturn:  { sign: 4, deg: 4,  min: 5,  house: 5  }  // 獅子 04°05' (1旬土星-入自旬) -> 5宮
+                };
+                const transitData = {
+                    Sun:     { sign: 10,deg: 15, min: 22, house: 11 }, // 水瓶 15°22' (2旬水星) -> 11宮
+                    Moon:    { sign: 7, deg: 8,  min: 40, house: 8  }, // 天蠍 08°40' (1旬火星) -> 8宮
+                    Mercury: { sign: 11,deg: 9,  min: 55, house: 12 }, // 雙魚 09°55' (距10°木星旬僅5'！仍屬1旬土星) -> 12宮
+                    Venus:   { sign: 9, deg: 14, min: 30, house: 10 }, // 摩羯 14°30' (2旬火星) -> 10宮
+                    Mars:    { sign: 1, deg: 25, min: 18, house: 2  }, // 金牛 25°18' (3旬土星) -> 2宮
+                    Jupiter: { sign: 6, deg: 14, min: 12, house: 7  }, // 天秤 14°12' (2旬土星) -> 7宮
+                    Saturn:  { sign: 0, deg: 6,  min: 44, house: 1  }  // 白羊 06°44' (1旬火星) -> 1宮
+                };
+                applyChartData(natalData, transitData);
+                document.getElementById('natal-asc-sign').value = 6; // 天秤上升
+                document.getElementById('natal-asc-deg').value = 9;
+                document.getElementById('natal-asc-min').value = 45;
+                document.getElementById('natal-almuten-planet').value = 'Saturn';
+
+                document.getElementById('chain1-anchor-mode').value = 'asc_ruler';
+                document.getElementById('chain2-start-planet').value = 'Saturn';
+                document.getElementById('chain2-role-label').value = '法達大運主星 (Firdaria Lord)';
+                document.getElementById('chain3-start-planet').value = 'Mercury';
+                document.getElementById('chain3-chart-mode').value = 'transit';
+                document.getElementById('chain3-role-label').value = '文書合約用神（三宮主／水星）';
+                document.getElementById('record-title-input').value = '範例二：合約財運與交界臨界測試';
+                if (notify) showToast("已載入「範例二：交界臨界（9°52' / 9°55'）測試」");
+            }
+            updateAllPreviews();
+            runFullChainAnalysis();
+        }
+
+        function applyChartData(natalData, transitData) {
+            PLANET_KEYS.forEach(pKey => {
+                if (natalData[pKey]) {
+                    document.getElementById(`natal-${pKey}-sign`).value = natalData[pKey].sign;
+                    document.getElementById(`natal-${pKey}-deg`).value = natalData[pKey].deg;
+                    document.getElementById(`natal-${pKey}-min`).value = natalData[pKey].min ?? 0;
+                    document.getElementById(`natal-${pKey}-house`).value = natalData[pKey].house;
+                }
+                if (transitData[pKey]) {
+                    document.getElementById(`transit-${pKey}-sign`).value = transitData[pKey].sign;
+                    document.getElementById(`transit-${pKey}-deg`).value = transitData[pKey].deg;
+                    document.getElementById(`transit-${pKey}-min`).value = transitData[pKey].min ?? 0;
+                    document.getElementById(`transit-${pKey}-house`).value = transitData[pKey].house;
+                }
+            });
+        }
+
+        function readCurrentState() {
+            const natal = {};
+            const transit = {};
+            PLANET_KEYS.forEach(pKey => {
+                natal[pKey] = {
+                    sign:  parseInt(document.getElementById(`natal-${pKey}-sign`).value, 10),
+                    deg:   clampInt(document.getElementById(`natal-${pKey}-deg`).value, 0, 29, 0),
+                    min:   clampInt(document.getElementById(`natal-${pKey}-min`).value, 0, 59, 0),
+                    house: parseInt(document.getElementById(`natal-${pKey}-house`).value, 10)
+                };
+                transit[pKey] = {
+                    sign:  parseInt(document.getElementById(`transit-${pKey}-sign`).value, 10),
+                    deg:   clampInt(document.getElementById(`transit-${pKey}-deg`).value, 0, 29, 0),
+                    min:   clampInt(document.getElementById(`transit-${pKey}-min`).value, 0, 59, 0),
+                    house: parseInt(document.getElementById(`transit-${pKey}-house`).value, 10)
+                };
+            });
+
+            return {
+                title: document.getElementById('record-title-input').value.trim() || `推演紀錄_${new Date().toLocaleDateString()}`,
+                timestamp: new Date().toISOString(),
+                asc: {
+                    sign: parseInt(document.getElementById('natal-asc-sign').value, 10),
+                    deg:  clampInt(document.getElementById('natal-asc-deg').value, 0, 29, 0),
+                    min:  clampInt(document.getElementById('natal-asc-min').value, 0, 59, 0)
+                },
+                almuten: document.getElementById('natal-almuten-planet').value,
+                natal,
+                transit,
+                chains: {
+                    c1Mode:  document.getElementById('chain1-anchor-mode').value,
+                    c1Start: document.getElementById('chain1-start-planet').value,
+                    c2Start: document.getElementById('chain2-start-planet').value,
+                    c2Role:  document.getElementById('chain2-role-label').value,
+                    c3Start: document.getElementById('chain3-start-planet').value,
+                    c3Mode:  document.getElementById('chain3-chart-mode').value,
+                    c3Role:  document.getElementById('chain3-role-label').value
+                }
+            };
+        }
+
+        function restoreFullState(state) {
+            if (!state || !state.natal || !state.transit) return;
+            applyChartData(state.natal, state.transit);
+            if (state.asc) {
+                document.getElementById('natal-asc-sign').value = state.asc.sign ?? 0;
+                document.getElementById('natal-asc-deg').value = state.asc.deg ?? 0;
+                document.getElementById('natal-asc-min').value = state.asc.min ?? 0;
+            }
+            if (state.almuten) {
+                document.getElementById('natal-almuten-planet').value = state.almuten;
+            }
+            if (state.chains) {
+                document.getElementById('chain1-anchor-mode').value = state.chains.c1Mode || 'custom';
+                document.getElementById('chain1-start-planet').value = state.chains.c1Start || 'Sun';
+                document.getElementById('chain2-start-planet').value = state.chains.c2Start || 'Mars';
+                document.getElementById('chain2-role-label').value = state.chains.c2Role || '年度小限時主星 (Annual Profection)';
+                document.getElementById('chain3-start-planet').value = state.chains.c3Start || 'Jupiter';
+                document.getElementById('chain3-chart-mode').value = state.chains.c3Mode || 'transit';
+                document.getElementById('chain3-role-label').value = state.chains.c3Role || '事業官祿用神（十宮主／太陽）';
+            }
+            if (state.title) {
+                document.getElementById('record-title-input').value = state.title;
+            }
+            updateAllPreviews();
+            runFullChainAnalysis();
+        }
+
+        // ============================================================================
+        // 6. LocalStorage 存檔與 JSON 檔案匯出/匯入
+        // ============================================================================
+        const STORAGE_KEY = "DECAN_ASTRO_GLASS_CHAINS_V2";
+
+        function getSavedRecords() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function refreshSavedRecordsDropdown(selectedId = "") {
+            const records = getSavedRecords();
+            const sel = document.getElementById('saved-records-select');
+            sel.innerHTML = `<option value="">-- 載入本機存檔 (${records.length}筆) --</option>`;
+            records.forEach(rec => {
+                const opt = new Option(`${rec.title} (${new Date(rec.timestamp).toLocaleDateString()})`, rec.id);
+                if (rec.id === selectedId) opt.selected = true;
+                sel.add(opt);
+            });
+        }
+
+        function saveToLocalStorage() {
+            const state = readCurrentState();
+            const records = getSavedRecords();
+            const id = "rec_" + Date.now();
+            records.unshift({ id, ...state });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+            refreshSavedRecordsDropdown(id);
+            showToast(`已儲存案例：「${state.title}」`);
+        }
+
+        function loadFromLocalStorage() {
+            const id = document.getElementById('saved-records-select').value;
+            if (!id) return;
+            const found = getSavedRecords().find(r => r.id === id);
+            if (found) {
+                restoreFullState(found);
+                showToast(`已載入案例：「${found.title}」`);
+            }
+        }
+
+        function requestDeleteRecord() {
+            const sel = document.getElementById('saved-records-select');
+            if (!sel.value) {
+                showToast("請先在下拉選單選擇要刪除的存檔");
+                return;
+            }
+            const title = sel.options[sel.selectedIndex].text;
+            document.getElementById('delete-modal-text').textContent = `確定要刪除「${title}」嗎？此操作無法復原。`;
+            const modal = document.getElementById('delete-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('delete-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function confirmDeleteRecord() {
+            const sel = document.getElementById('saved-records-select');
+            const id = sel.value;
+            if (id) {
+                const records = getSavedRecords().filter(r => r.id !== id);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+                refreshSavedRecordsDropdown();
+                showToast("已刪除該筆存檔紀錄");
+            }
+            closeDeleteModal();
+        }
+
+        function exportToJSON() {
+            const state = readCurrentState();
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `${state.title.replace(/\s+/g, '_')}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("已匯出 JSON 精密座標存檔！");
+        }
+
+        function importFromJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    restoreFullState(parsed);
+                    showToast(`已成功匯入存檔：「${parsed.title || file.name}」`);
+                } catch (err) {
+                    showToast("JSON 檔案格式錯誤，無法讀取");
+                }
+                event.target.value = "";
+            };
+            reader.readAsText(file);
+        }
+
+        // ============================================================================
+        // 7. 核心演算法：36旬向後相容定位鎖鏈追蹤器 (Decan Dispositor Chain)
+        // ============================================================================
+        function traceDecanChain(chartMap, startPlanetKey) {
+            const steps = [];
+            const visited = [];
+            let currentKey = startPlanetKey;
+            let terminationType = ""; // "final" | "loop"
+            let finalPlanets = [];
+            let loopStartIndex = -1;
+
+            while (true) {
+                const pos = chartMap[currentKey];
+                const signObj = SIGNS[pos.sign];
+                const houseObj = HOUSES.find(h => h.num === pos.house);
+                const preciseInfo = getPreciseDecanInfo(pos.sign, pos.deg, pos.min);
+                const decanObj = preciseInfo.decan;
+                const planetObj = PLANETS[currentKey];
+                const rulerObj = PLANETS[decanObj.ruler];
+
+                const isOwnDecan = (decanObj.ruler === currentKey);
+
+                steps.push({
+                    stepIndex: steps.length + 1,
+                    planet: planetObj,
+                    sign: signObj,
+                    deg: pos.deg,
+                    min: pos.min,
+                    degMinStr: formatDegMin(pos.deg, pos.min),
+                    house: houseObj,
+                    decan: decanObj,
+                    isCuspal: preciseInfo.isCuspal,
+                    cuspNote: preciseInfo.cuspNote,
+                    nextRuler: rulerObj,
+                    isOwnDecan
+                });
+
+                visited.push(currentKey);
+
+                // 情況 A：入自管旬 -> 最終定位星
+                if (isOwnDecan) {
+                    terminationType = "final";
+                    finalPlanets = [planetObj];
+                    break;
+                }
+
+                // 情況 B：下一顆旬主星已出現在鏈條中 -> 互容或循環閉環
+                const existingIdx = visited.indexOf(decanObj.ruler);
+                if (existingIdx !== -1) {
+                    terminationType = "loop";
+                    loopStartIndex = existingIdx;
+                    finalPlanets = visited.slice(existingIdx).map(k => PLANETS[k]);
+                    break;
+                }
+
+                // 繼續向後傳導
+                currentKey = decanObj.ruler;
+            }
+
+            return {
+                steps,
+                terminationType,
+                finalPlanets,
+                loopStartIndex,
+                lastStep: steps[steps.length - 1]
+            };
+        }
+
+        // ============================================================================
+        // 8. 渲染單條定位鎖鏈視覺化卡片 (明亮毛玻璃風格)
+        // ============================================================================
+        function renderSingleChainUI(containerId, meta, chainResult) {
+            const { title, badgeText, badgeStyle, borderAccent, roleLabel, chartLabel } = meta;
+            const { steps, terminationType, finalPlanets, loopStartIndex } = chainResult;
+
+            const stepsHtml = steps.map((st, idx) => {
+                const isLast = (idx === steps.length - 1);
+                const isInLoop = (terminationType === "loop" && idx >= loopStartIndex);
+
+                let statusBadge = "";
+                if (st.isOwnDecan) {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-900 border border-emerald-300 text-[11px] font-bold">★ 入自管旬（最終定位星）</span>`;
+                } else if (isLast && terminationType === "loop") {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-lg bg-purple-100 text-purple-900 border border-purple-300 text-[11px] font-bold">↻ 接納閉環（回 ${st.nextRuler.symbol}${st.nextRuler.name}）</span>`;
+                } else if (isInLoop) {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-lg bg-purple-50 text-purple-800 border border-purple-200 text-[11px] font-semibold">閉環節點</span>`;
+                } else {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-700 border border-slate-200 text-[11px] font-semibold">第 ${st.stepIndex} 棒傳導</span>`;
+                }
+
+                const cuspAlertHtml = st.isCuspal
+                    ? `<div class="px-2.5 py-1 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-bold flex items-center gap-1">
+                         <span>⚠ 交界臨界（Cuspal Alert）：</span><span>${st.cuspNote}</span>
+                       </div>`
+                    : '';
+
+                return `
+                    <div>
+                        <div class="glass-subcard rounded-2xl p-4 border ${st.isOwnDecan ? 'border-emerald-400/80 bg-emerald-50/30' : isInLoop ? 'border-purple-300/80 bg-purple-50/25' : 'border-white/90'} space-y-2.5">
+                            
+                            <!-- 節點標頭：星體 + 狀態 -->
+                            <div class="flex items-center justify-between gap-2 flex-wrap">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-7 h-7 rounded-xl bg-amber-100/90 border border-amber-300 flex items-center justify-center text-amber-800 font-bold text-sm shadow-sm">
+                                        ${st.planet.symbol}
+                                    </span>
+                                    <div>
+                                        <span class="text-sm font-bold text-ink-deep">${st.planet.name}</span>
+                                        <span class="text-xs font-bold text-amber-700 ml-1.5">${st.sign.symbol}${st.sign.name} ${st.degMinStr}</span>
+                                    </div>
+                                </div>
+                                ${statusBadge}
+                            </div>
+
+                            ${cuspAlertHtml}
+
+                            <!-- 旬位與後天12宮 -->
+                            <div class="grid grid-cols-2 gap-2 bg-white/75 rounded-xl p-2.5 text-xs border border-slate-200/70">
+                                <div>
+                                    <span class="text-slate-500 block text-[11px]">所落36旬與迦勒底旬主</span>
+                                    <span class="text-ink-deep font-bold">${st.sign.name}第${st.decan.decanNum}旬</span>
+                                    <span class="text-amber-700 font-extrabold ml-1">(${st.nextRuler.symbol}${st.nextRuler.name})</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-500 block text-[11px]">對應後天12宮</span>
+                                    <span class="text-indigo-800 font-bold">${st.house.name}</span>
+                                </div>
+                            </div>
+
+                            <!-- 四維徵象精要 -->
+                            <div class="space-y-1.5 text-xs pt-1 border-t border-slate-200/70">
+                                <div class="flex items-center justify-between gap-1 flex-wrap">
+                                    <span class="text-amber-800 font-bold">🃏 ${st.decan.tarot}</span>
+                                    <span class="text-[11px] font-semibold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200/70">🩺 ${st.decan.bodyPart.split('、')[0]}</span>
+                                </div>
+                                <p class="text-slate-700 leading-relaxed text-[11px]">
+                                    <strong class="text-ink-deep">旬義：</strong>${st.decan.meaning}
+                                </p>
+                                <p class="text-slate-600 leading-relaxed text-[11px]">
+                                    <strong class="text-purple-800">阿格里帕：</strong>${st.decan.agrippa.replace('《隱秘哲學》：', '')}
+                                </p>
+                                <p class="text-teal-800 font-medium text-[11px]">
+                                    <strong>對應人體部位：</strong>${st.decan.bodyPart}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 向後相容傳導箭頭 -->
+                        ${!isLast ? `
+                            <div class="flex flex-col items-center py-2">
+                                <span class="text-[11px] font-bold bg-white/90 border border-amber-300/80 px-3 py-0.5 rounded-full text-amber-800 shadow-sm">
+                                    ⬇ 向後定位交接給旬主星：${st.nextRuler.symbol} ${st.nextRuler.name}
+                                </span>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            const finalNames = finalPlanets.map(p => `${p.symbol}${p.name}`).join(' ⇄ ');
+            const summaryFooter = `
+                <div class="mt-4 pt-3 border-t border-slate-200/80 bg-white/80 rounded-2xl p-3.5 border ${borderAccent} shadow-sm">
+                    <div class="text-[11px] font-semibold text-slate-500">
+                        鎖鏈最終定位核心（${terminationType === 'final' ? '唯一定位星' : '互容循環核心'}）：
+                    </div>
+                    <div class="flex items-center justify-between mt-1">
+                        <span class="font-serif text-base font-bold text-amber-700">${finalNames}</span>
+                        <span class="text-xs text-indigo-800 font-bold bg-indigo-50 px-2.5 py-0.5 rounded-lg border border-indigo-200">
+                            終點落宮：${chainResult.lastStep.house.name}
+                        </span>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById(containerId).innerHTML = `
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-200/80">
+                    <div>
+                        <h3 class="font-serif text-base font-bold text-ink-deep">${title}</h3>
+                        <p class="text-[11px] text-slate-600 mt-0.5 font-medium">${roleLabel} ｜ ${chartLabel}</p>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-xl text-xs font-bold border ${badgeStyle}">${badgeText}</span>
+                </div>
+                <div class="flex-1 space-y-1">
+                    ${stepsHtml}
+                </div>
+                ${summaryFooter}
+            `;
+        }
+
+        // ============================================================================
+        // 9. 執行三鏈推演與綜合吉凶判讀
+        // ============================================================================
+        function runFullChainAnalysis() {
+            syncChain1Planet();
+            const state = readCurrentState();
+
+            const anchorModeNames = {
+                "almuten":   "最尊貴命主星 (Almuten)",
+                "asc_ruler": "上升星座守護星 (Lord of ASC)",
+                "asc_decan": "上升點旬主星 (Decan of ASC)",
+                "sun":       "本命太陽 (Sun)",
+                "moon":      "本命月亮 (Moon)",
+                "custom":    "自選本命星體"
+            };
+
+            // 1. 追蹤三條定位鎖鏈
+            const chain1 = traceDecanChain(state.natal, state.chains.c1Start);
+            const chain2 = traceDecanChain(state.transit, state.chains.c2Start);
+            const c3ChartMap = (state.chains.c3Mode === 'natal') ? state.natal : state.transit;
+            const chain3 = traceDecanChain(c3ChartMap, state.chains.c3Start);
+
+            // 2. 渲染三條鎖鏈 UI
+            renderSingleChainUI('chain-1-container', {
+                title: "鎖鏈一 · 本命命主定位鏈",
+                badgeText: "本命根基",
+                badgeStyle: "bg-indigo-100 text-indigo-900 border-indigo-300",
+                borderAccent: "border-indigo-300",
+                roleLabel: anchorModeNames[state.chains.c1Mode] || "本命命主",
+                chartLabel: "本命盤定位"
+            }, chain1);
+
+            renderSingleChainUI('chain-2-container', {
+                title: "鎖鏈二 · 流年時主定位鏈",
+                badgeText: "流年動態",
+                badgeStyle: "bg-amber-100 text-amber-900 border-amber-300",
+                borderAccent: "border-amber-300",
+                roleLabel: state.chains.c2Role,
+                chartLabel: "即時行運盤定位"
+            }, chain2);
+
+            renderSingleChainUI('chain-3-container', {
+                title: "鎖鏈三 · 事件用神定位鏈",
+                badgeText: "事件核心",
+                badgeStyle: "bg-emerald-100 text-emerald-900 border-emerald-300",
+                borderAccent: "border-emerald-300",
+                roleLabel: state.chains.c3Role,
+                chartLabel: state.chains.c3Mode === 'natal' ? "本命用神鏈" : "流年用神鏈"
+            }, chain3);
+
+            // 3. 三鏈交叉比對與吉凶評估
+            const c1Finals = chain1.finalPlanets.map(p => p.key);
+            const c2Finals = chain2.finalPlanets.map(p => p.key);
+            const c3Finals = chain3.finalPlanets.map(p => p.key);
+
+            const intersect123 = c1Finals.filter(k => c2Finals.includes(k) && c3Finals.includes(k));
+            const intersect23  = c2Finals.filter(k => c3Finals.includes(k));
+            const intersect13  = c1Finals.filter(k => c3Finals.includes(k));
+            const intersect12  = c1Finals.filter(k => c2Finals.includes(k));
+
+            let confluenceTitle = "";
+            let confluenceDesc = "";
+            let confluenceBonus = 0;
+
+            if (intersect123.length > 0) {
+                const names = intersect123.map(k => `${PLANETS[k].symbol}${PLANETS[k].name}`).join('、');
+                confluenceTitle = `三鏈歸一・高度共鳴（最終匯聚於：${names}）`;
+                confluenceDesc = `【命主鏈】、【時主鏈】與【用神鏈】經過層層36旬傳導後，全部匯聚到同一核心星體「${names}」！這代表「天時（時主）、地利（用神）與人和（命主）」完全同頻，事件具備極強的確定性與爆發力。`;
+                confluenceBonus = 2.0;
+            } else if (intersect23.length > 0) {
+                const names = intersect23.map(k => `${PLANETS[k].symbol}${PLANETS[k].name}`).join('、');
+                confluenceTitle = `時主與用神交會（流年精準觸發核心：${names}）`;
+                confluenceDesc = `【流年時主鏈】與【事件用神鏈】最終共同指向「${names}」，代表流年大運的能量精準點燃了你所問事件的用神核心，外界機緣成熟，事件正在積極醞釀顯化。`;
+                confluenceBonus = 1.2;
+            } else if (intersect13.length > 0) {
+                const names = intersect13.map(k => `${PLANETS[k].symbol}${PLANETS[k].name}`).join('、');
+                confluenceTitle = `命主與用神相合（主觀意願契合：${names}）`;
+                confluenceDesc = `【本命命主鏈】與【事件用神鏈】最終交會於「${names}」，代表你個人的主觀能力與該事件高度契合，但需主動順應流年時主星（${chain2.finalPlanets.map(p=>p.name).join('、')}）的節奏來推動。`;
+                confluenceBonus = 0.8;
+            } else if (intersect12.length > 0) {
+                const names = intersect12.map(k => `${PLANETS[k].symbol}${PLANETS[k].name}`).join('、');
+                confluenceTitle = `命主與時主同頻（個人運勢引動：${names}）`;
+                confluenceDesc = `【本命命主鏈】與【流年時主鏈】交會於「${names}」，代表你今年的個人狀態與流年步伐一致，但所問事件的用神（${chain3.finalPlanets.map(p=>p.name).join('、')}）另有獨立的發展軌道，需多方協調。`;
+                confluenceBonus = 0.5;
+            } else {
+                confluenceTitle = "三鏈分立・多線並行（各有最終定位核心）";
+                confluenceDesc = `三條定位鎖鏈各自收斂於不同的星體（命主終點：${chain1.finalPlanets.map(p=>p.name).join('/')}；時主終點：${chain2.finalPlanets.map(p=>p.name).join('/')}；用神終點：${chain3.finalPlanets.map(p=>p.name).join('/')}），代表事件牽涉多方勢力拉鋸，需依各終點星體的吉凶屬性定奪。`;
+                confluenceBonus = -0.3;
+            }
+
+            // 檢查是否有交界臨界節點
+            const allCuspalSteps = [...chain1.steps, ...chain2.steps, ...chain3.steps].filter(s => s.isCuspal);
+            const cuspalWarningHtml = allCuspalSteps.length > 0
+                ? `<div class="mt-3 p-3 rounded-xl bg-rose-50/90 border border-rose-200 text-xs text-rose-800">
+                     <strong>⚠ 精密交界提醒：</strong>本次推演鏈中包含處於 30 角分臨界點的星曜（${allCuspalSteps.map(s => `${s.planet.symbol}${s.planet.name} ${s.degMinStr}`).join('、')}），代表事件正處於前後兩旬能量交替的關鍵轉折期，局勢容易出現戲劇性切換。
+                   </div>`
+                : '';
+
+            const calcChainScore = (chain) => {
+                const avg = chain.finalPlanets.reduce((acc, p) => acc + p.score, 0) / chain.finalPlanets.length;
+                return chain.terminationType === 'final' ? avg + 0.5 : avg - 0.3;
+            };
+
+            const totalScore = (calcChainScore(chain1) * 0.3) + (calcChainScore(chain2) * 0.35) + (calcChainScore(chain3) * 0.35) + confluenceBonus;
+
+            let verdict = {};
+            if (totalScore >= 2.2) {
+                verdict = {
+                    badge: "大吉 · 順水推舟（Highly Auspicious）",
+                    style: "bg-emerald-100 text-emerald-900 border-emerald-400",
+                    advice: "三軸定位鎖鏈最終由吉星（木/金/日）掌權且結構穩固，事件發展順遂、貴人得力，適合果斷推進並收穫成果。"
+                };
+            } else if (totalScore >= 0.4) {
+                verdict = {
+                    badge: "中吉 · 穩健成事（Moderately Favorable）",
+                    style: "bg-amber-100 text-amber-900 border-amber-400",
+                    advice: "整體定位結構正向，雖中間傳導過程需經歷幾番調整或協商，但最終落點穩健，按部就班即可達成目標。"
+                };
+            } else if (totalScore >= -1.2) {
+                verdict = {
+                    badge: "平／拉鋸 · 轉折考驗（Transitional & Mixed）",
+                    style: "bg-indigo-100 text-indigo-900 border-indigo-400",
+                    advice: "定位鎖鏈出現互容閉環或吉凶交雜，代表事件過程反覆、多方角力，宜借重塔羅策略智慧耐心周旋，切忌衝動。"
+                };
+            } else {
+                verdict = {
+                    badge: "凶／阻滯 · 謹慎守成（Challenging & Cautionary）",
+                    style: "bg-rose-100 text-rose-900 border-rose-400",
+                    advice: "三軸鎖鏈最終多收斂於凶星（土星限制或火星衝突）或陷入消耗性閉環，事件易遇阻礙、壓力或損耗，宜採保守防禦策略。"
+                };
+            }
+
+            const synthesisHtml = `
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
+                    <div>
+                        <span class="text-xs text-amber-700 uppercase tracking-widest font-bold">THREE-CHAIN CONFLUENCE & VERDICT</span>
+                        <h3 class="font-serif text-xl sm:text-2xl font-bold text-ink-deep mt-1">三軸36旬定位交會與事件吉凶總評</h3>
+                    </div>
+                    <div class="px-4 py-2 rounded-2xl border font-serif font-bold text-sm sm:text-base shadow-sm ${verdict.style}">
+                        ${verdict.badge}
+                    </div>
+                </div>
+
+                <!-- 總評結論 -->
+                <div class="mt-5 glass-subcard rounded-2xl p-5 border border-amber-300/70 space-y-2">
+                    <div class="text-sm font-bold text-amber-900">${confluenceTitle}</div>
+                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${confluenceDesc}</p>
+                    <p class="text-xs sm:text-sm text-ink-deep font-bold pt-2 border-t border-slate-200/80">
+                        【吉凶總斷】：${verdict.advice}
+                    </p>
+                    ${cuspalWarningHtml}
+                </div>
+
+                <!-- 三大維度細節對照 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5">
+                    
+                    <!-- 維度一：後天12宮演化路徑 -->
+                    <div class="glass-subcard rounded-2xl p-4 space-y-2.5">
+                        <h4 class="font-serif text-sm font-bold text-indigo-900">① 後天12宮事件演化路徑</h4>
+                        <ul class="text-xs text-slate-700 space-y-2 leading-relaxed">
+                            <li>
+                                <strong class="text-indigo-800">命主落實宮：</strong>
+                                <span>${chain1.steps[0].house.name} ➔ 終點 ${chain1.lastStep.house.name}</span>
+                            </li>
+                            <li>
+                                <strong class="text-amber-800">時主引動宮：</strong>
+                                <span>${chain2.steps[0].house.name} ➔ 終點 ${chain2.lastStep.house.name}</span>
+                            </li>
+                            <li>
+                                <strong class="text-emerald-800">用神結局宮：</strong>
+                                <span>${chain3.steps[0].house.name} ➔ 終點 ${chain3.lastStep.house.name}</span>
+                            </li>
+                            <li class="pt-1.5 border-t border-slate-200/80 text-[11px] text-slate-600">
+                                事件核心舞台最終聚焦於：<strong class="text-ink-deep">${chain3.lastStep.house.name}（${chain3.lastStep.house.domain}）</strong>。
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 維度二：阿格里帕與塔羅戰略指南 -->
+                    <div class="glass-subcard rounded-2xl p-4 space-y-2.5">
+                        <h4 class="font-serif text-sm font-bold text-amber-900">② 終點塔羅與古典徵象啟示</h4>
+                        <div class="text-xs text-slate-700 space-y-2 leading-relaxed">
+                            <p>
+                                <strong class="text-ink-deep">時主終點牌：</strong>${chain2.lastStep.decan.tarot}<br>
+                                <span class="text-[11px] text-slate-500">（${chain2.lastStep.decan.tarotKeywords}）</span>
+                            </p>
+                            <p>
+                                <strong class="text-emerald-800">用神終點牌：</strong>${chain3.lastStep.decan.tarot}<br>
+                                <span class="text-[11px] text-slate-500">（${chain3.lastStep.decan.tarotKeywords}）</span>
+                            </p>
+                            <p class="pt-1.5 border-t border-slate-200/80 text-[11px] text-purple-900">
+                                <strong>終局徵象：</strong>${chain3.lastStep.decan.agrippa.replace('《隱秘哲學》：', '')}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 維度三：黃道人體與身心防範 -->
+                    <div class="glass-subcard rounded-2xl p-4 space-y-2.5">
+                        <h4 class="font-serif text-sm font-bold text-teal-900">③ 黃道人體健康防範重點</h4>
+                        <div class="text-xs text-slate-700 space-y-2 leading-relaxed">
+                            <p><strong class="text-indigo-800">命主終點部位：</strong>${chain1.lastStep.decan.bodyPart}</p>
+                            <p><strong class="text-amber-800">時主終點部位：</strong>${chain2.lastStep.decan.bodyPart}</p>
+                            <p><strong class="text-emerald-800">用神終點部位：</strong>${chain3.lastStep.decan.bodyPart}</p>
+                            <p class="pt-1.5 border-t border-slate-200/80 text-[11px] text-slate-500">
+                                若終點由火星（發炎/外傷）或土星（慢性勞損/阻塞）主導，請特別加強上述對應部位的保養。
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            `;
+
+            document.getElementById('synthesis-panel').innerHTML = synthesisHtml;
+        }
+
+        // ============================================================================
+        // 10. 渲染 36 旬全表速查手冊
+        // ============================================================================
+        function renderHandbook() {
+            const signFilter = document.getElementById('filter-sign').value;
+            const rulerFilter = document.getElementById('filter-ruler').value;
+            const grid = document.getElementById('handbook-grid');
+
+            const filtered = DECANS_DB.filter(d => {
+                const matchSign = (signFilter === 'ALL') || (d.signId === parseInt(signFilter, 10));
+                const matchRuler = (rulerFilter === 'ALL') || (d.ruler === rulerFilter);
+                return matchSign && matchRuler;
+            });
+
+            grid.innerHTML = filtered.map(d => {
+                const sign = SIGNS[d.signId];
+                const ruler = PLANETS[d.ruler];
+                return `
+                    <div class="glass-subcard rounded-2xl p-5 hover:border-amber-400/80 transition flex flex-col justify-between space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between pb-2.5 border-b border-slate-200/80">
+                                <span class="font-serif font-bold text-ink-deep text-base">
+                                    ${sign.symbol} ${sign.name} 第${d.decanNum}旬 <span class="text-xs text-slate-500 font-sans">(${d.range})</span>
+                                </span>
+                                <span class="px-2.5 py-0.5 rounded-lg bg-amber-100/90 border border-amber-300 text-amber-900 text-xs font-bold">
+                                    ${ruler.symbol} ${ruler.name}
+                                </span>
+                            </div>
+
+                            <div class="mt-3 space-y-2.5 text-xs">
+                                <div>
+                                    <span class="text-amber-800 font-bold">❖ 塔羅對應：</span>
+                                    <span class="text-ink-deep font-bold">${d.tarot}</span>
+                                    <p class="text-slate-600 mt-0.5">關鍵字：${d.tarotKeywords}</p>
+                                </div>
+                                <div>
+                                    <span class="text-ink-deep font-bold">❖ 占星核心含義：</span>
+                                    <p class="text-slate-700 mt-0.5 leading-relaxed">${d.meaning}</p>
+                                </div>
+                                <div>
+                                    <span class="text-purple-800 font-bold">❖ 阿格里帕徵象：</span>
+                                    <p class="text-slate-600 mt-0.5 leading-relaxed">${d.agrippa}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-2.5 border-t border-slate-200/80 text-xs flex items-start gap-1.5">
+                            <span class="text-teal-800 font-bold shrink-0">❖ 身體部位：</span>
+                            <span class="text-teal-900 font-medium">${d.bodyPart}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.onload = function() {
+            initUI();
+        };
+    </script>
+</body>
+</html>
